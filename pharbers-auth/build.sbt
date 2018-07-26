@@ -1,0 +1,31 @@
+def common = Seq(
+	scalaVersion := "2.11.8",
+	version := "1.0.0",
+	organization := "com.pharbers"
+)
+
+lazy val root = (project in file(".")).
+	enablePlugins(PlayScala)
+	.disablePlugins(PlayFilters)
+    .settings(common: _*).
+	settings(
+		name := "pharbers-auth",
+		fork in run := true,
+		javaOptions += "-Xmx2G"
+	)
+
+routesGenerator := InjectedRoutesGenerator
+
+resolvers += Resolver.mavenLocal
+
+libraryDependencies += guice
+libraryDependencies ++= Seq(
+	"com.pharbers" % "pharbers-client-base_2.11" % "1.0.0",
+	"com.pharbers" % "pharbers-redis" % "0.1",
+
+	// Redis lib
+	"net.debasishg" % "redisclient_2.11" % "3.4",
+
+	"org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
+	"org.specs2" % "specs2_2.11" % "3.7" % Test
+)

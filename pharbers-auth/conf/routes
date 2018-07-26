@@ -1,0 +1,7 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+POST    /api/auth/encrypt           controllers.AuthController.encryptToken()
+POST    /api/auth/parse             controllers.AuthController.parseToken()
