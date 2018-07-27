@@ -1,0 +1,10 @@
+<pharbers-modules>
+    <auth>
+        <host value="pharbers-auth" />
+        <port value="9000" />
+    </auth>
+    <user>
+        <host value="pharbers-user" />
+        <port value="9000" />
+    </user>
+</pharbers-modules>

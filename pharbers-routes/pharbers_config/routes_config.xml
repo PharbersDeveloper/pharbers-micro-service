@@ -1,0 +1,10 @@
+<pharbers-modules>
+    <auth>
+        <host value="123.56.179.133" />
+        <port value="18001" />
+    </auth>
+    <user>
+        <host value="123.56.179.133" />
+        <port value="18002" />
+    </user>
+</pharbers-modules>
