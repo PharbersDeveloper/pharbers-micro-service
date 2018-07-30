@@ -1,0 +1,10 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+POST    /api/role/push                  controllers.RoleController.pushRole()
+POST    /api/role/pop                   controllers.RoleController.popRole()
+POST    /api/role/update                controllers.RoleController.updateRole()
+POST    /api/role/query                 controllers.RoleController.queryRole()
+POST    /api/role/query/multi           controllers.RoleController.queryMultiRole()
