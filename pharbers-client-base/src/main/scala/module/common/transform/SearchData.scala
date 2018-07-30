@@ -1,4 +1,4 @@
-package module.common.datamodel
+package module.common.transform
 
 import play.api.libs.json.{JsArray, JsObject, JsValue}
 
