@@ -9,7 +9,7 @@ lazy val root = (project in file(".")).
 	.disablePlugins(PlayFilters)
     .settings(common: _*).
 	settings(
-		name := "pharbers-role",
+		name := "pharbers-user-role",
 		fork in run := true,
 		javaOptions += "-Xmx2G"
 	)
