@@ -12,7 +12,7 @@ import play.api.mvc.{AbstractController, ControllerComponents}
 import com.pharbers.bmpattern.ResultMessage.msg_CommonResultMessage
 
 /**
-  * Created by clock on 18-7-29.
+  * Created by clock on 18-7-31.
   */
 class User2CompanyController @Inject()(implicit cc: ControllerComponents, as_inject: ActorSystem, dbt: dbInstanceManager) extends AbstractController(cc) {
 
@@ -31,15 +31,9 @@ class User2CompanyController @Inject()(implicit cc: ControllerComponents, as_inj
                 :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 
-    def queryCompanyByUser = Action(request => requestArgsQuery().requestArgs(request) { jv =>
-        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query company by user"))), jv)
-                :: msg_queryCompanyByUser(jv)
-                :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
-    })
-
-    def queryUsersByCompany = Action(request => requestArgsQuery().requestArgs(request) { jv =>
-        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query user by company"))), jv)
-                :: msg_queryUsersByCompany(jv)
+    def queryBind = Action(request => requestArgsQuery().requestArgs(request) { jv =>
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query user company connection"))), jv)
+                :: msg_queryUserCompanyBind(jv)
                 :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 

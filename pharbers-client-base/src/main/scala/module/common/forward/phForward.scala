@@ -15,9 +15,6 @@ trait phForward extends PharbersInjectModule {
     def host: String = config.mc.find(p => p._1 == "host").get._2.toString
     def port: String = config.mc.find(p => p._1 == "port").get._2.toString
 
-    implicit val j2pr: JsValue => (Option[Map[String, JsValue]], Option[JsValue]) =
-        jv => (Some(jv.asInstanceOf[JsObject].value.toMap), None)
-
     def forward(api: String): httpOpt =
         HTTP(s"http://$host:$port$api").header("Accept" -> "application/json", "Content-Type" -> "application/json")
 

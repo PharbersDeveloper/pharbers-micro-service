@@ -7,4 +7,20 @@
         <host value="pharbers-user" />
         <port value="9000" />
     </user>
+    <role>
+        <host value="pharbers-role" />
+        <port value="18003" />
+    </role>
+    <company>
+        <host value="pharbers-company" />
+        <port value="18004" />
+    </company>
+    <user-role>
+        <host value="pharbers-user-role" />
+        <port value="18005" />
+    </user-role>
+    <user-company>
+        <host value="pharbers-user-company" />
+        <port value="18006" />
+    </user-company>
 </pharbers-modules>

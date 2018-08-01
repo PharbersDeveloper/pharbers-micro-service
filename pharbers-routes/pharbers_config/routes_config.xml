@@ -1,10 +1,30 @@
 <pharbers-modules>
     <auth>
-        <host value="123.56.179.133" />
-        <port value="18001" />
+        <host value="127.0.0.1" />
+        <port value="8082" />
     </auth>
     <user>
         <host value="123.56.179.133" />
         <port value="18002" />
     </user>
+    <role>
+        <host value="123.56.179.133" />
+        <port value="18003" />
+    </role>
+    <company>
+        <host value="123.56.179.133" />
+        <port value="18004" />
+    </company>
+    <user-role>
+        <host value="123.56.179.133" />
+        <port value="18005" />
+    </user-role>
+    <user-company>
+        <host value="127.0.0.1" />
+        <port value="8081" />
+    </user-company>
+    <user-company2>
+        <host value="123.56.179.133" />
+        <port value="18006" />
+    </user-company2>
 </pharbers-modules>

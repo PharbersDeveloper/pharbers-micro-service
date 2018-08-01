@@ -3,9 +3,6 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-POST    /api/user/company/bind              controllers.User2CompanyController.bind()
-POST    /api/user/company/unbind            controllers.User2CompanyController.unbind()
-POST    /api/company/user/bind              controllers.User2CompanyController.bind()
-POST    /api/company/user/unbind            controllers.User2CompanyController.unbind()
-POST    /api/user/company/id                controllers.User2CompanyController.queryCompanyByUser()
-POST    /api/company/users/id               controllers.User2CompanyController.queryUsersByCompany()
+POST    /api/user-company/bind/push                 controllers.User2CompanyController.bind()
+POST    /api/user-company/bind/pop                  controllers.User2CompanyController.unbind()
+POST    /api/user-company/bind/query                controllers.User2CompanyController.queryBind()

@@ -31,6 +31,7 @@ class UserRole extends basemodel
     override val qcm : JsValue => DBObject = { js =>
         val umap = Map("users" -> (js \ "data" \ "condition" \ "users").asOpt[List[String]].getOrElse(List.empty))
         val rmap = Map("roles" -> (js \ "data" \ "condition" \ "roles").asOpt[List[String]].getOrElse(List.empty))
+        println(umap)
         umap("users") ::: rmap("roles") match {
             case Nil => DBObject("query" -> "none")
             case _ => $and($or(umap("users") map (x => DBObject("user_id" -> x))) :: $or(rmap("roles") map (x => DBObject("role_id" -> x))) :: Nil)

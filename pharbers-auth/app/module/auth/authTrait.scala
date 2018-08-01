@@ -19,11 +19,11 @@ trait authTrait {
 
         val token_expire = (data \ "data" \ "condition" \ "token_expire").asOpt[Int].map(x => x).getOrElse(24 * 60 * 60) //default expire in 24h
 
-        val user_id = (data \ "user" \ "user_id").as[String]
+        val user_id = (data \ "user" \ "id").as[String]
         val email = (data \ "user" \ "email").asOpt[String].getOrElse("")
         val user_name = (data \ "user" \ "user_name").asOpt[String].getOrElse("")
 
-        val company_id = (data \ "company" \ "company_id").asOpt[String].getOrElse("")
+        val company_id = (data \ "company" \ "id").asOpt[String].getOrElse("")
 
         val roles = (data \ "roles").asOpt[JsArray] match {
             case Some(x) => x.value.map(x => (x \ "role_name").asOpt[String].getOrElse("")).mkString("#")
