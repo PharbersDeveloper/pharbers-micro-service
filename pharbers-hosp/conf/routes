@@ -1,0 +1,10 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+POST    /api/hosp/push                  controllers.HospController.pushHosp()
+POST    /api/hosp/pop                   controllers.HospController.popHosp()
+POST    /api/hosp/update                controllers.HospController.updateHosp()
+POST    /api/hosp/query                 controllers.HospController.queryHosp()
+POST    /api/hosp/query/multi           controllers.HospController.queryMultiHosp()
