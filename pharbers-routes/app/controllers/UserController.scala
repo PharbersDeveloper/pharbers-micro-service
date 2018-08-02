@@ -11,7 +11,7 @@ import com.pharbers.bmpattern.ResultMessage.msg_CommonResultMessage
 import controllers.common.JsonapiAdapter.msg_JsonapiAdapter
 import module.AuthMessage.msg_TokenEncrypt
 import module.CompanyMessage.msg_queryCompanyByBind
-import module.RoleMessage.msg_queryRoleByBind
+import module.RoleMessage.msg_queryRoleMultiByBind
 import module.User2CompanyMessage.msg_queryUserCompanyBind
 import module.User2RoleMessage.msg_queryUserRolesBind
 import module.UserMessage.msg_userWithPassword
@@ -28,7 +28,7 @@ class UserController @Inject()(implicit cc: ControllerComponents, as_inject: Act
                 :: msg_queryUserCompanyBind(jv)
                 :: msg_queryCompanyByBind(jv)
                 :: msg_queryUserRolesBind(jv)
-                :: msg_queryRoleByBind(jv)
+                :: msg_queryRoleMultiByBind(jv)
                 :: msg_TokenEncrypt(jv)
                 :: msg_JsonapiAdapter(jv)
                 :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map())))

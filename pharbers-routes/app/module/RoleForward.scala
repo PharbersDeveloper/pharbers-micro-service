@@ -25,7 +25,7 @@ object RoleMessage {
 
     case class msg_queryRole(data: JsValue) extends msg_RoleCommand
 
-    case class msg_queryRoleByBind(data: JsValue) extends msg_RoleCommand
+    case class msg_queryRoleMultiByBind(data: JsValue) extends msg_RoleCommand
 
     case class msg_queryRoleMulti(data: JsValue) extends msg_RoleCommand
 
@@ -58,7 +58,7 @@ object RoleModule extends ModuleTrait {
         case msg_queryRoleMulti(data: JsValue) =>
             repeater((d, _) => forward("/api/role/query/multi").post(d))(mergeResult)(data, pr)
 
-        case msg_queryRoleByBind(data: JsValue) =>
+        case msg_queryRoleMultiByBind(data: JsValue) =>
             repeater((_, p) => forward("/api/role/query/multi").post(mergeCond(p)))(mergeResult)(data, pr)
 
         case _ => ???
