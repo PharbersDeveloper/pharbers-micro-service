@@ -1,0 +1,10 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+POST    /api/good/push              controllers.GoodController.pushGood()
+POST    /api/good/pop               controllers.GoodController.popGood()
+POST    /api/good/update            controllers.GoodController.updateGood()
+POST    /api/good/query             controllers.GoodController.queryGood()
+POST    /api/good/query/multi       controllers.GoodController.queryGoodsMulti()
