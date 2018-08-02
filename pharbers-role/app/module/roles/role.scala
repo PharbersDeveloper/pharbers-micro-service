@@ -27,7 +27,14 @@ class role extends basemodel
     }
 
     override val qcm : JsValue => DBObject = { js =>
-        (js \ "role" \ "roles").asOpt[List[String]].get match {
+        (js \ "data" \ "condition" \ "roles").asOpt[List[String]].get match {
+            case Nil => DBObject("query" -> "none")
+            case ll : List[String] => $or(ll map (x => DBObject("_id" -> new ObjectId(x))))
+        }
+    }
+
+    val qcmByName : JsValue => DBObject = { js =>
+        (js \ "data" \ "condition" \ "roles").asOpt[List[String]].get match {
             case Nil => DBObject("query" -> "none")
             case ll : List[String] => $or(ll map (x => DBObject("role_name" -> x)))
         }

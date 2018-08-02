@@ -1,0 +1,10 @@
+19:15:36.833 INFO  s.m.l.Main$ - Starting server in /Users/clock/workSpace/Pharbers/pharbers-micro-service/pharbers-client-base/project
+19:15:36.848 INFO  s.m.l.Main$ - Classpath: /Users/clock/.atom/packages/ide-scala/coursier
+19:15:39.251 INFO  s.m.l.Formatter$ - Classloading scalafmt with 28 downloaded jars
+19:15:40.082 INFO  s.m.l.ScalametaLanguageServer - Initialized with /Users/clock/workSpace/Pharbers/pharbers-micro-service/pharbers-client-base/project, InitializeParams(5634,/Users/clock/workSpace/Pharbers/pharbers-micro-service/pharbers-client-base/project/,ClientCapabilities())
+19:15:40.306 ERROR l.c.LanguageServer$$anon$1 - Invalid Notification: List((,List(JsonValidationError(List(notification parameters must be given),WrappedArray())))) - Message: JsonRpcNotificationMessage(initialized,NoParams)
+19:15:40.326 INFO  s.m.l.p.DocumentHighlightProvider$ - Document highlight in Uri(file:///Users/clock/workSpace/Pharbers/pharbers-micro-service/pharbers-client-base/project/plugins.sbt)
+19:15:40.326 INFO  s.m.l.p.DocumentHighlightProvider$ - Document highlight in Uri(file:///Users/clock/workSpace/Pharbers/pharbers-micro-service/pharbers-client-base/project/plugins.sbt)
+19:15:40.327 INFO  s.m.l.s.InMemorySymbolIndex - resolveName at Uri(file:///Users/clock/workSpace/Pharbers/pharbers-micro-service/pharbers-client-base/project/plugins.sbt):0:0
+19:15:40.326 INFO  s.m.l.s.InMemorySymbolIndex - resolveName at Uri(file:///Users/clock/workSpace/Pharbers/pharbers-micro-service/pharbers-client-base/project/plugins.sbt):0:0
+19:15:44.753 INFO  s.m.l.ScalametaLanguageServer - Shutting down...

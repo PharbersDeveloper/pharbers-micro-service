@@ -16,5 +16,6 @@ object RoleMessage {
     case class msg_updateRole(data : JsValue) extends msg_RoleCommand
     case class msg_queryRole(data : JsValue) extends msg_RoleCommand
     case class msg_queryRoleMulti(data : JsValue) extends msg_RoleCommand
+    case class msg_queryRoleMultiByName(data : JsValue) extends msg_RoleCommand
 
 }

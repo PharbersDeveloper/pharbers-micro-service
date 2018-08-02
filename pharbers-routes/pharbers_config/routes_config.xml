@@ -7,4 +7,20 @@
         <host value="123.56.179.133" />
         <port value="18002" />
     </user>
+    <company>
+        <host value="123.56.179.133" />
+        <port value="18003" />
+    </company>
+    <role>
+        <host value="123.56.179.133" />
+        <port value="18004" />
+    </role>
+    <user-company>
+        <host value="123.56.179.133" />
+        <port value="18005" />
+    </user-company>
+    <user-role>
+        <host value="123.56.179.133" />
+        <port value="18006" />
+    </user-role>
 </pharbers-modules>

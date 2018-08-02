@@ -1,10 +1,26 @@
 <pharbers-modules>
     <auth>
-        <host value="pharbers-auth" />
+        <host value="auth" />
         <port value="9000" />
     </auth>
     <user>
-        <host value="pharbers-user" />
+        <host value="user" />
         <port value="9000" />
     </user>
+    <company>
+        <host value="company" />
+        <port value="9000" />
+    </company>
+    <role>
+        <host value="role" />
+        <port value="9000" />
+    </role>
+    <user-company>
+        <host value="user-company" />
+        <port value="9000" />
+    </user-company>
+    <user-role>
+        <host value="user-role" />
+        <port value="9000" />
+    </user-role>
 </pharbers-modules>

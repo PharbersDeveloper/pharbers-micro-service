@@ -9,7 +9,6 @@ import com.pharbers.bmpattern.ModuleTrait
 import com.pharbers.pharbersmacro.CURDMacro._
 import com.pharbers.bmmessages.{CommonModules, MessageDefines}
 
-
 object UserModule extends ModuleTrait {
     val u: user = impl[user]
     import u._
