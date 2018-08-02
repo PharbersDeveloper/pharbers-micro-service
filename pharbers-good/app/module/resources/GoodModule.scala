@@ -4,7 +4,7 @@ import module.common.processor
 import module.common.processor._
 import play.api.libs.json.JsValue
 import module.common.stragety.impl
-import module.resources.CompanyMessage._
+import module.resources.GoodMessage._
 import com.pharbers.bmpattern.ModuleTrait
 import com.pharbers.pharbersmacro.CURDMacro._
 import com.pharbers.bmmessages.{CommonModules, MessageDefines}

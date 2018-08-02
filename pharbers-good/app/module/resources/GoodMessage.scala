@@ -9,7 +9,7 @@ import com.pharbers.bmmessages.CommonMessage
 abstract class msg_GoodCommand extends CommonMessage("good", GoodModule)
 
 // 公司
-object CompanyMessage {
+object GoodMessage {
     case class msg_verifyGoodRegister(data: JsValue) extends msg_GoodCommand
     case class msg_pushGood(data: JsValue) extends msg_GoodCommand
     case class msg_popGood(data: JsValue) extends msg_GoodCommand

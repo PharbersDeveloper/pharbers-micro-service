@@ -9,7 +9,7 @@ import com.pharbers.bmmessages.CommonMessage
 abstract class msg_ResourceCommand extends CommonMessage("resource", ResourceModule)
 
 // 公司
-object CompanyMessage {
+object ResourceMessage {
     case class msg_verifyResourceRegister(data: JsValue) extends msg_ResourceCommand
     case class msg_pushResource(data: JsValue) extends msg_ResourceCommand
     case class msg_popResource(data: JsValue) extends msg_ResourceCommand
