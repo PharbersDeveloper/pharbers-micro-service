@@ -26,6 +26,7 @@ object RoleModule extends ModuleTrait {
         case msg_updateRole(data) => updateMacro(qc, up2m, dr, data, names, name)
         case msg_queryRole(data) => queryMacro(qc, dr, data, names, name)
         case msg_queryRoleMulti(data) => queryMultiMacro(qcm, dr, data, names, names)
+        case msg_queryRoleMultiByName(data) => queryMultiMacro(qcmByName, dr, data, names, names)
         case _ => ???
     }
 

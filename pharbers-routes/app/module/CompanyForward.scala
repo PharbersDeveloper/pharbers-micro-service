@@ -76,7 +76,7 @@ case class company() extends phForward {
 
         toJson(Map(
             "data" -> toJson(Map(
-                "type" -> toJson("companies"),
+                "type" -> toJson("company"),
                 "condition" -> toJson(Map(
                     "company_id" -> toJson(id)
                 ))

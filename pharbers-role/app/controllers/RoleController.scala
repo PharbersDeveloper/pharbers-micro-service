@@ -12,7 +12,7 @@ import play.api.libs.json.Json.toJson
 import play.api.mvc._
 
 /**
-  * Created by clock on 18-7-6.
+  * Created by clock on 18-8-1.
   */
 class RoleController @Inject()(implicit cc: ControllerComponents, as_inject: ActorSystem, dbt: dbInstanceManager)
         extends AbstractController(cc) {
@@ -57,6 +57,14 @@ class RoleController @Inject()(implicit cc: ControllerComponents, as_inject: Act
         requestArgsQuery().requestArgs(request) { jv =>
             MessageRoutes(msg_log(toJson(Map("method" -> toJson("query multi role"))), jv)
                     :: msg_queryRoleMulti(jv)
+                    :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+        }
+    }
+
+    def queryMultiRoleByName() = Action { request =>
+        requestArgsQuery().requestArgs(request) { jv =>
+            MessageRoutes(msg_log(toJson(Map("method" -> toJson("query multi role by Name"))), jv)
+                    :: msg_queryRoleMultiByName(jv)
                     :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
         }
     }
