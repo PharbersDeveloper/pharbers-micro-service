@@ -23,25 +23,25 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query hospital list"))), jv) ::
                 msg_tokenParse(jv) ::
                 msg_queryScenarioDetails(jv) :::
-                msg_formatQueryHospLst(jv) ::
+                msg_queryQueryHospLst(jv) ::
                 msg_JsonapiAdapter(jv) ::
                 msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 
-    def queryBudgetInfo = Action(request => requestArgsQuery().requestArgs(request) { jv =>
+    def queryHospitalDetail = Action(request => requestArgsQuery().requestArgs(request) { jv =>
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query hospital list"))), jv) ::
+                msg_tokenParse(jv) ::
+                msg_queryScenarioDetails(jv) :::
+                msg_queryHospitalDetail(jv) ::
+                msg_JsonapiAdapter(jv) ::
+                msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+    })
+
+    def queryBudgetProgress = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query budget info"))), jv) ::
                 msg_tokenParse(jv) ::
                 msg_queryScenarioDetails(jv) :::
-                msg_formatQueryBudget(jv) ::
-                msg_JsonapiAdapter(jv) ::
-                msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
-    })
-
-    def queryhumansInfo = Action(request => requestArgsQuery().requestArgs(request) { jv =>
-        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query humans info"))), jv) ::
-                msg_tokenParse(jv) ::
-                msg_queryScenarioDetails(jv) :::
-                msg_formatQueryHumans(jv) ::
+                msg_queryBudgetProgress(jv) ::
                 msg_JsonapiAdapter(jv) ::
                 msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })

@@ -2,17 +2,17 @@ package scenario
 
 import module.common.processor
 import module.common.processor._
-import scenario.ScenarioMessage.{msg_queryScenario, _}
-import play.api.libs.json.{JsObject, JsValue}
+import scenario.ScenarioMessage._
+import com.mongodb.casbah.Imports._
 import module.common.transform.drTrait
 import com.pharbers.bmpattern.ModuleTrait
-import com.mongodb.casbah.Imports.DBObject
-import com.pharbers.pharbersmacro.CURDMacro.queryMacro
-import com.pharbers.bmmessages.{CommonMessage, CommonModules, MessageDefines}
-import module.GoodsMessage.msg_queryMultiGoodsByScenario
-import module.HospMessage.msg_queryMultiHospByScenario
+import play.api.libs.json.{JsString, JsValue}
 import module.RepMessage.msg_queryMultiRepByScenario
+import com.pharbers.pharbersmacro.CURDMacro.queryMacro
+import module.HospMessage.msg_queryMultiHospByScenario
+import module.GoodsMessage.msg_queryMultiGoodsByScenario
 import module.ResourceMessage.msg_queryMultiResourceByScenario
+import com.pharbers.bmmessages.{CommonMessage, CommonModules, MessageDefines}
 
 /**
   * Created by clock on 18-8-2.
@@ -22,17 +22,21 @@ abstract class msg_ScenarioCommand extends CommonMessage("scenario", ScenarioMod
 
 object ScenarioMessage {
     def msg_queryScenarioDetails(jv: JsValue): List[CommonMessage] = msg_queryScenario(jv) ::
-                msg_queryMultiHospByScenario(jv) ::
-                msg_queryMultiRepByScenario(jv) ::
-                msg_queryMultiResourceByScenario(jv) ::
-                msg_queryMultiGoodsByScenario (jv) ::
-                Nil
+            msg_queryMultiHospByScenario(jv) ::
+            msg_queryMultiRepByScenario(jv) ::
+            msg_queryMultiResourceByScenario(jv) ::
+            msg_queryMultiGoodsByScenario(jv) ::
+            Nil
 
     case class msg_queryScenario(data: JsValue) extends msg_ScenarioCommand
-    case class msg_formatQueryHospLst(data: JsValue) extends msg_ScenarioCommand
-    case class msg_formatQueryBudget(data: JsValue) extends msg_ScenarioCommand
-    case class msg_formatQueryHumans(data: JsValue) extends msg_ScenarioCommand
-    case class msg_formatQueryHospitalDetails(data: JsValue) extends msg_ScenarioCommand
+
+    case class msg_queryMultiScenario(data: JsValue) extends msg_ScenarioCommand
+
+    case class msg_queryQueryHospLst(data: JsValue) extends msg_ScenarioCommand
+
+    case class msg_queryBudgetProgress(data: JsValue) extends msg_ScenarioCommand
+
+    case class msg_queryHospitalDetail(data: JsValue) extends msg_ScenarioCommand
 
 }
 
@@ -48,12 +52,19 @@ object ScenarioModule extends ModuleTrait with FormatScenarioTrait {
 
         case msg_queryScenario(data: JsValue) =>
             queryMacro(qc, cdr, data, db_name, name)
-        case msg_formatQueryHospLst(data: JsValue) =>
+
+        case msg_queryMultiScenario(data: JsValue) =>
+            queryMacro(qcm, cdr, data, db_name, name)
+
+        case msg_queryQueryHospLst(_: JsValue) =>
             format(pr)(formatHospitals)
-        case msg_formatQueryBudget(_) => format(pr)(formatBudget)
-        case msg_formatQueryHumans(_) => format(pr)(formatHumans)
-        case msg_formatQueryHospitalDetails(data) =>
-            format(pr.map( _ ++: data.as[JsObject].value.toMap).orElse(pr))(formatHospitalDetails)
+
+        case msg_queryBudgetProgress(_) =>
+            format(pr)(formatBudget)
+
+        case msg_queryHospitalDetail(data) =>
+            val hosp_id = (data \ "data" \ "condition" \ "hospital_id").as[JsString]
+            format(Some(pr.get ++ Map("hosp_id" -> hosp_id)))(formatHospitalDetails)
 
         case _ => ???
     }
@@ -67,5 +78,15 @@ case class scenarios() extends drTrait {
     val qc: JsValue => DBObject = { js =>
         val tmp = (js \ "data" \ "condition" \ "uuid").asOpt[String].get
         DBObject("uuid" -> tmp)
+    }
+
+    val qcm: JsValue => DBObject = { js =>
+        val user_id = (js \ "data" \ "condition" \ "user_id").asOpt[String].get
+        val proposal_id = (js \ "data" \ "condition" \ "proposal_id").asOpt[String].get
+
+        $and(
+            DBObject("user_id" -> user_id),
+            DBObject("proposal_id" -> proposal_id)
+        )
     }
 }

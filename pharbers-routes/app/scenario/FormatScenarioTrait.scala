@@ -15,19 +15,19 @@ trait FormatScenarioTrait extends SearchData {
         }
     }
 
-    val formatHospitals: String Map JsValue => (Option[String Map JsValue], Option[JsValue]) = { m =>
-        val hosps = m("hosps").as[List[Map[String, JsValue]]]
-        val goods = m("goods").as[List[Map[String, JsValue]]]
-        val reps = m("reps").as[List[Map[String, JsValue]]]
+    val formatHospitals: String Map JsValue => (Option[String Map JsValue], Option[JsValue]) = { data =>
+        val hosps = data("hosps").as[List[Map[String, JsValue]]]
+        val goods = data("goods").as[List[Map[String, JsValue]]]
+        val reps = data("reps").as[List[Map[String, JsValue]]]
 
-        val current = (toJson(m) \ "scenario" \ "current").as[Map[String, JsValue]]
-        val past = (toJson(m) \ "scenario" \ "past").as[List[Map[String, JsValue]]]
+        val current = (toJson(data) \ "scenario" \ "current").as[Map[String, JsValue]]
+        val past = (toJson(data) \ "scenario" \ "past").as[List[Map[String, JsValue]]]
         val current_phase = current("phase").as[Int]
 
         val current_dests = current("connect_dest").as[List[String Map JsValue]]
         val current_dest_rep = current("dest_rep").as[List[String Map JsValue]]
         val current_dest_goods = current("dest_goods").as[List[String Map JsValue]]
-        val previous_dest_goods = past.find(p => p("phase").as[Int] == current_phase - 1)
+        val pre_dest_goods = past.find(p => p("phase").as[Int] == current_phase - 1)
                 .get("dest_goods").as[List[Map[String, JsValue]]]
 
         val result = current_dests.map { c_dest =>
@@ -44,17 +44,17 @@ trait FormatScenarioTrait extends SearchData {
                 )
             )
 
-            val p_self_goods = previous_dest_goods.filter(x => x("dest_id") == c_dest("id"))
+            val p_self_goods = pre_dest_goods.filter(x => x("dest_id") == c_dest("id"))
 
             val medLst = current_dest_goods.filter(x => x("dest_id") == c_dest("id"))
-                    .map(_ ("goods_id"))
-                    .map(id => goods.find(good => good("id") == id).get)
-                    .map(med =>
+                    .map(x => x("goods_id") -> x("relationship"))
+                    .map { case (id, relationship) => goods.find(good => good("id") == id).get -> relationship }
+                    .map { case (med, relationship) =>
                         p_self_goods.find(_ ("goods_id") == med("id")) match {
-                            case Some(x) => med - "relationship" ++ x("relationship").as[Map[String, JsValue]]
-                            case None => med - "relationship" ++ c_dest("relationship").as[Map[String, JsValue]]
+                            case Some(x) => med ++ x("relationship").as[Map[String, JsValue]]
+                            case None => med ++ relationship.as[Map[String, JsValue]]
                         }
-                    )
+                    }
 
             val goods_details: Map[String, JsValue] = Map(
                 "key" -> toJson("target-goods-card"),
@@ -69,133 +69,195 @@ trait FormatScenarioTrait extends SearchData {
             ))
         }
 
+        (Some(Map("result" -> toJson(result))), None)
+    }
+
+    val formatBudget: String Map JsValue => (Option[String Map JsValue], Option[JsValue]) = { data =>
+        val current = (toJson(data) \ "scenario" \ "current").asOpt[Map[String, JsValue]]
+        val connect_reso = current.get("connect_reso").as[List[String Map JsValue]]
+
+        val total_day = connect_reso.find(_ ("type").as[String] == "day")
+                .get("relationship").asOpt[Map[String, JsValue]]
+                .get("value").as[Int]
+
+        val total_money = connect_reso.find(_ ("type").as[String] == "money")
+                .get("relationship").asOpt[Map[String, JsValue]]
+                .get("value").as[Long]
+
+        val current_dest_goods_rep = current.get("dest_goods_rep").as[List[String Map JsValue]]
+        val all_use_money = current_dest_goods_rep.map(_ ("relationship").as[Map[String, JsValue]])
+                .map(x => x("user_input_money").as[Long])
+                .sum
+
+        val reps = data("reps").as[List[Map[String, JsValue]]]
+        val connect_rep = current.get("connect_rep").as[List[String Map JsValue]]
+                .map(x => x ++ reps.find(_ ("id") == x("id")).get)
+        val everyone_use_day = connect_rep.map { rep =>
+            val use_day = current_dest_goods_rep.filter(_ ("rep_id") == rep("id"))
+                    .map(_ ("relationship").as[Map[String, JsValue]])
+                    .map(x => x("user_input_day").as[Int])
+                    .sum
+            Map(
+                "name" -> rep("rep_name"),
+                "total" -> toJson(total_day),
+                "used" -> toJson(use_day)
+            )
+        }
+
+        val result = Map(
+            "budget" -> toJson(Map(
+                "used" -> toJson(all_use_money),
+                "total" -> toJson(total_money)
+            )),
+            "manpower" -> toJson(everyone_use_day)
+        )
 
         (Some(Map("result" -> toJson(result))), None)
     }
 
-    val formatBudget: String Map JsValue => (Option[String Map JsValue], Option[JsValue]) = { m =>
-        val current = searchJSValue(m("scenario"))("current")("current")
-        val total = searchJSValue(current)("connect_reso")("connect_reso").as[List[String Map JsValue]].find(f => f("type").as[String] == "money").
-                map(x => searchJSValue(toJson(x))("value")("value")).getOrElse(toJson(0))
-        val used = searchJSValue(current)("dest_goods_rep")("dest_goods_rep").as[List[String Map JsValue]].
-                map(x => searchJSValue(toJson(x))("user_input_money")("user_input_money").as[Double]).sum
-        (Some(Map("result" -> toJson(Map("total" -> toJson(total)) ++ Map("used" -> toJson(used))))), None)
-    }
+    val formatHospitalDetails: String Map JsValue => (Option[String Map JsValue], Option[JsValue]) = { data =>
+        val target_hosp_id = data("hosp_id")
 
-    val formatHumans: String Map JsValue => (Option[String Map JsValue], Option[JsValue]) = { m =>
-        val current = (toJson(m) \ "scenario" \ "current" \ "connect_reso").as[List[Map[String, JsValue]]]
-        println(current)
-//		val total = searchJSValue(current)("connect_reso")().as[List[String Map JsValue]].find(f => f("type").as[String] == "day").
-//			map(x =>searchJSValue(toJson(x))("value")("value")).getOrElse(toJson(0))
-//
-//		val reVal = searchJSValue(current)("dest_goods_rep")("dest_goods_rep").as[List[String Map JsValue]].
-//			groupBy(g => g("rep_id").as[String]).map { x =>
-//			searchJSValue(current)("connect_rep")("connect_rep").as[List[String Map JsValue]].find(f => f("id").as[String] == x._1).map { rep =>
-//				val used = x._2.map(z => searchJSValue(toJson(z))("user_input_day")("user_input_day").as[Double]).sum
-//				Map("name" -> rep("rep_name"), "total" -> toJson(total), "used" -> toJson(used))
-//			}.getOrElse(Map.empty)
-//		}.toList
-        (Some(Map("result" -> toJson("reVal"))), None)
-    }
+        val target_hosp_detail = data("hosps").as[List[Map[String, JsValue]]]
+                .find(x => x("id") == target_hosp_id).get
+        val goods = data("goods").as[List[Map[String, JsValue]]]
+        val reps = data("reps").as[List[Map[String, JsValue]]]
 
-    val formatHospitalDetails: String Map JsValue => (Option[String Map JsValue], Option[JsValue]) = { m =>
+        val current = (toJson(data) \ "scenario" \ "current").as[Map[String, JsValue]]
+        val past = (toJson(data) \ "scenario" \ "past").as[List[Map[String, JsValue]]]
+        val current_phase = current("phase").as[Int]
 
-        val hospital_id = searchJSValue(m("data"))("hospital_id")("hospital_id").as[String]
-        val current = searchJSValue(m("scenario"))("current")("current")
-        val past = searchJSValue(m("scenario"))("past")("past").as[List[String Map JsValue]]
-        val connect_goods = searchJSValue(current)("connect_goods")("connect_goods").as[List[String Map JsValue]]
-        val c_phase = searchJSValue(current)("phase")("phase").as[Int]
-        val p_phase_obj = past.find(f => f("phase").as[Int] == c_phase - 1).map(x => toJson(x)).getOrElse(throw new Exception("is null"))
+        val target_dest_goods = current("dest_goods").as[List[String Map JsValue]]
+                .filter(x => x("dest_id") == target_hosp_id)
+        val pre_dest_goods = past.find(p => p("phase").as[Int] == current_phase - 1)
+                .get("dest_goods").as[List[Map[String, JsValue]]]
+        val pre_dest_goods_rep = past.find(p => p("phase").as[Int] == current_phase - 1)
+                .get("dest_goods_rep").as[List[Map[String, JsValue]]]
 
-        val hospital = searchJSValue(current)("connect_dest")("connect_dest").as[List[String Map JsValue]].
-                find(f => f("id").as[String] == hospital_id).map { x =>
-            val basicinfo = Map("key" -> toJson("医院类型"), "value" -> x("hosp_category")) ::
-                    Map("key" -> toJson("医院等级"), "value" -> x("hosp_level")) ::
-                    Map("key" -> toJson("病床数量"), "value" -> x("focus_department")) ::
-                    Map("key" -> toJson("特色科室"), "value" -> x("beds")) ::
-                    Map("key" -> toJson("门诊人次/年"), "value" -> x("outpatient_yearly")) ::
-                    Map("key" -> toJson("手术台数"), "value" -> x("surgery_yearly")) ::
-                    Map("key" -> toJson("住院人数/年"), "value" -> x("inpatient_yearly")) ::
-                    Nil
-            Map("id" -> toJson(hospital_id),
-                "name" -> x("hosp_name"),
-                "basicinfo" -> toJson(basicinfo),
-                "news" -> Json.parse("{}"),
-                "policy" -> Json.parse("{}")
+        val current_dest_rep = current("dest_rep").as[List[String Map JsValue]]
+        val represents = current_dest_rep.filter(_ ("dest_id") == target_hosp_id)
+                .map(_ ("rep_id"))
+                .map(rep_id => reps.find(_ ("id") == rep_id).get)
+
+        val hosp_detail = Map(
+            "key" -> toJson("target-detail-hospital-card"),
+            "values" -> toJson(target_hosp_detail ++ Map(
+                "represents" -> toJson(represents)
+            ))
+        )
+
+        val medLst = target_dest_goods.map { target_med =>
+            val target_med_detail = goods.find(_ ("id") == target_med("goods_id")).get
+
+            // 上期分配的所有预算
+            val pre_target_sum = pre_dest_goods_rep.filter(_ ("dest_id") == target_hosp_id)
+                    .filter(_ ("goods_id") == target_med("goods_id"))
+                    .map(_ ("relationship").as[Map[String, JsValue]])
+                    .map(_ ("user_input_target").as[Long])
+                    .sum
+
+            // overview
+            val target_med_relationship = target_med("relationship").as[Map[String, JsValue]]
+            val pre_target_dest_goods_relationship = pre_dest_goods.filter(_ ("dest_id") == target_hosp_id)
+                    .find(_ ("goods_id") == target_med("goods_id"))
+                    .get("relationship").as[Map[String, JsValue]]
+            val overview = List(
+                Map(
+                    "key" -> toJson("药品市场潜力"),
+                    "value" -> target_med_relationship("potential")
+                ),
+                Map(
+                    "key" -> toJson("增长潜力"),
+                    "value" -> target_med_relationship("potential_growth")
+                ),
+                Map(
+                    "key" -> toJson("上期销售额"),
+                    "value" -> pre_target_dest_goods_relationship("sales")
+                ),
+                Map(
+                    "key" -> toJson("上期增长"),
+                    "value" -> pre_target_dest_goods_relationship("sales_growth")
+                ),
+                Map(
+                    "key" -> toJson("份额"),
+                    "value" -> pre_target_dest_goods_relationship("share")
+                ),
+                Map(
+                    "key" -> toJson("上期贡献率"),
+                    "value" -> pre_target_dest_goods_relationship("contri_rate")
+                )
             )
-        }.getOrElse(throw new Exception("is null"))
 
-        val goods = searchJSValue(current)("dest_goods")("dest_goods").
-                as[List[String Map JsValue]].filter(f => f("dest_id").as[String] == hospital_id).
-                map(x => connect_goods.find(f => f("id").as[String] == x("goods_id").as[String]).map(_ ++ x).
-                        getOrElse(throw new Exception("is null"))).map { details =>
+            // detail 表格数据
+            val compete_goods_detail = target_med_relationship("compete_goods").as[List[Map[String, JsValue]]]
+                    .map(_ ("goods_id"))
+                    .map(x => goods.find(_ ("id") == x).get)
+            val detail = Map(
+                "id" -> toJson(target_med_detail("id").as[String] + "_detail"),
+                "value" -> toJson(target_med_detail :: compete_goods_detail)
+            )
 
-            val p_target = searchJSValue(p_phase_obj)("dest_goods_rep")("dest_goods_rep").as[List[String Map JsValue]].
-                    filter(f => f("dest_id").as[String] == hospital_id && f("goods_id").as[String] == details("goods_id").as[String]).map(d =>
-                (d("relationship") \ "user_input_target").as[Long]
-            ).sum
+            // history 表格数据
+            val history_deploy = past.flatMap { phase_obj =>
+                val target_dest_goods_rep = phase_obj("dest_goods_rep").as[List[Map[String, JsValue]]]
+                        .filter(_ ("dest_id") == target_hosp_id)
+                        .filter(_ ("goods_id") == target_med("goods_id"))
 
-            val basicInfo = ((details("relationship") \ "compete_goods").as[List[String Map JsValue]].
-                    map(x => x("goods_id").as[String]) :+ details("goods_id").as[String]).map { x =>
-                connect_goods.find(f => f("id").as[String] == x).map { d =>
-                    Map("product_name" -> d("prod_name"),
-                        "type" -> details("prod_category"),
-                        "treatmentarea" -> d("therapeutic_field"),
-                        "selltime" -> d("launch_time"),
-                        "medicalinsurance" -> d("insure_type"),
-                        "development" -> d("research_type"),
-                        "companyprice" -> d("ref_price")
+                target_dest_goods_rep.map { phase_dest_goods_rep_obj =>
+                    val relationship = phase_dest_goods_rep_obj("relationship").as[Map[String, JsValue]]
+
+                    val rep_name = reps.find(_ ("id") == phase_dest_goods_rep_obj("rep_id")).get("rep_name")
+                    val use_day = relationship("user_input_day").as[Int]
+                    val use_budget = relationship("user_input_money").as[Long]
+                    val budget_proportion = relationship("budget_proportion").as[Double]
+                    val target = relationship("user_input_target").as[Long]
+                    val target_growth = relationship("target_growth").as[Double]
+                    val achieve_rate = relationship("achieve_rate").as[Double]
+
+                    Map(
+                        "time" -> toJson("周期" + phase_obj("phase").as[Int]),
+                        "rep_name" -> toJson(rep_name),
+                        "use_day" -> toJson(use_day),
+                        "use_budget" -> toJson(use_budget),
+                        "budget_proportion" -> toJson(budget_proportion),
+                        "target" -> toJson(target),
+                        "target_growth" -> toJson(target_growth),
+                        "achieve_rate" -> toJson(achieve_rate)
                     )
-                }.getOrElse(throw new Exception(""))
-            }
-
-            val profile = searchJSValue(p_phase_obj)("dest_goods")("dest_goods").
-                    as[List[String Map JsValue]].find(f => f("dest_id").as[String] == hospital_id && f("goods_id").as[String] == details("goods_id").as[String]).get
-
-            val history = past.flatMap { pi =>
-                pi("dest_goods_rep").as[List[String Map JsValue]].
-                        filter(f => f("dest_id").as[String] == hospital_id && f("goods_id").as[String] == details("goods_id").as[String]).map { x =>
-                    pi("connect_rep").as[List[String Map JsValue]].find(f => f("id").as[String] == x("rep_id").as[String]).map { d =>
-                        Map("time" -> toJson(s"周期${pi("phase").as[Int]}"),
-                            "representative" -> d("rep_name"),
-                            "timemanagement" -> (x("relationship") \ "user_input_day").as[JsValue],
-                            "budgetallocation" -> (x("relationship") \ "user_input_money").as[JsValue],
-                            "budgetratio" -> (x("relationship") \ "budget_proportion").as[JsValue],
-                            "target" -> (x("relationship") \ "user_input_target").as[JsValue],
-                            "growth" -> (x("relationship") \ "target_growth").as[JsValue],
-                            "achievementrate" -> (x("relationship") \ "achieve_rate").as[JsValue]
-                        )
-                    }
                 }
             }
+            val history = Map(
+                "id" -> toJson(target_med_detail("id").as[String] + "_history"),
+                "value" -> toJson(history_deploy)
+            )
 
-            val overview = Map("key" -> toJson("药品市场潜力"), "value" -> (details("relationship") \ "potential").as[JsValue]) ::
-                    Map("key" -> toJson("增长潜力"), "value" -> (details("relationship") \ "potential_growth").as[JsValue]) ::
-                    Map("key" -> toJson("上期销售额"), "value" -> (profile("relationship") \ "sales").as[JsValue]) ::
-                    Map("key" -> toJson("上期增长"), "value" -> (profile("relationship") \ "sales_growth").as[JsValue]) ::
-                    Map("key" -> toJson("份额"), "value" -> (profile("relationship") \ "share").as[JsValue]) ::
-                    Map("key" -> toJson("上期贡献率"), "value" -> (details("relationship") \ "contri_rate").as[JsValue]) :: Nil
+            // compete_goods 表格数据
+            val compete_goods = Map(
+                "id" -> toJson(target_med_detail("id").as[String] + "_compete_goods"),
+                "value" -> toJson("")
+            )
 
-            Map("id" -> details("id"),
-                "name" -> toJson(details("prod_category")),
-                "p_target" -> toJson(p_target),
+            Map(
+                "id" -> target_med_detail("id"),
+                "prod_category" -> target_med_detail("prod_category"),
+                "pre_target" -> toJson(pre_target_sum),
                 "overview" -> toJson(overview),
-                "detail" -> toJson(Map(
-                    "id" -> toJson(s"${details("id").as[String]}_detail"),
-                    "value" -> toJson(basicInfo))),
-                "history" -> toJson(Map(
-                    "id" -> toJson(s"${details("id").as[String]}_history"),
-                    "value" -> toJson(history))),
-                "competitionproducts" -> toJson(Map(
-                    "id" -> toJson(s"${details("id").as[String]}_competitionproducts"),
-                    "value" -> Json.parse("[]")
-                ))
+                "detail" -> toJson(detail),
+                "history" -> toJson(history),
+                "compete_goods" -> toJson(compete_goods)
             )
         }
 
-        (Some(Map("result" -> toJson(
-            Map("hospital" -> toJson(hospital),
-                "medicines" -> toJson(goods))
-        ))), None)
+        val med_detail = Map(
+            "key" -> toJson("target-detail-medicines-card"),
+            "values" -> toJson(medLst)
+        )
+
+        val result = Map(
+            "id" -> toJson(target_hosp_id),
+            "component_data" -> toJson(hosp_detail :: med_detail :: Nil)
+        )
+
+        (Some(Map("result" -> toJson(result))), None)
     }
 }
