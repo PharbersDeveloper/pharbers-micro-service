@@ -15,17 +15,11 @@ import com.pharbers.bmmessages.{CommonMessage, CommonModules, MessageDefines}
 abstract class msg_UserCommand extends CommonMessage("user", UserModule)
 
 object UserMessage {
-
     case class msg_userWithPassword(data: JsValue) extends msg_UserCommand
-
 }
 
 object UserModule extends ModuleTrait {
-
-    val user: phForward = new phForward {
-        override implicit lazy val module_name: String = "user"
-    }
-
+    val user: phForward = new phForward { override implicit lazy val module_name: String = "user" }
     import user._
 
     override def dispatchMsg(msg: MessageDefines)(pr: Option[Map[String, JsValue]])
@@ -36,6 +30,5 @@ object UserModule extends ModuleTrait {
 
         case _ => ???
     }
-
 }
 

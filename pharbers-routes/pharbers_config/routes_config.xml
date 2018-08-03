@@ -23,4 +23,20 @@
         <host value="123.56.179.133" />
         <port value="18006" />
     </user-role>
+    <hosp>
+        <host value="123.56.179.133" />
+        <port value="18007" />
+    </hosp>
+    <resource>
+        <host value="123.56.179.133" />
+        <port value="18008" />
+    </resource>
+    <representative>
+        <host value="123.56.179.133" />
+        <port value="18009" />
+    </representative>
+    <good>
+        <host value="123.56.179.133" />
+        <port value="18010" />
+    </good>
 </pharbers-modules>

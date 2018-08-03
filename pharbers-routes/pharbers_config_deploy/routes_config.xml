@@ -23,4 +23,20 @@
         <host value="user-role" />
         <port value="9000" />
     </user-role>
+    <hosp>
+        <host value="hosp" />
+        <port value="18007" />
+    </hosp>
+    <resource>
+        <host value="resource" />
+        <port value="18008" />
+    </resource>
+    <representative>
+        <host value="representative" />
+        <port value="18009" />
+    </representative>
+    <good>
+        <host value="good" />
+        <port value="18010" />
+    </good>
 </pharbers-modules>

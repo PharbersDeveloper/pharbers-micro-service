@@ -16,19 +16,12 @@ import com.pharbers.bmmessages.{CommonMessage, CommonModules, MessageDefines}
 abstract class msg_AuthCommand extends CommonMessage("auth", AuthModule)
 
 object AuthMessage {
-
     case class msg_TokenEncrypt(data: JsValue) extends msg_AuthCommand
-
     case class msg_tokenParse(data: JsValue) extends msg_AuthCommand
-
 }
 
 object AuthModule extends ModuleTrait {
-
-    val auth: phForward = new phForward {
-        override lazy val module_name: String = "auth"
-    }
-
+    val auth: phForward = new phForward { override lazy val module_name: String = "auth" }
     import auth._
 
     override def dispatchMsg(msg: MessageDefines)(pr: Option[Map[String, JsValue]])
@@ -38,10 +31,9 @@ object AuthModule extends ModuleTrait {
             repeater((_, p) => forward("/api/auth/encrypt").post(toJson(p)))(onlyResult)(data, pr)
 
         case msg_tokenParse(data: JsValue) =>
-            repeater((_, p) => forward("/api/auth/parse").post(toJson(p)))(onlyResult)(data, pr)
+            repeater((d, _) => forward("/api/auth/parse").post(d))(onlyResult)(data, pr)
 
         case _ => ???
     }
-
 }
 
