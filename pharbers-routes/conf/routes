@@ -5,6 +5,8 @@
 
 POST    /api/user/login                         controllers.UserController.userLogin()
 
+POST    /api/proposal/lst                       controllers.ProposalController.queryProposalLst
+
 POST    /api/proposal/hospital/lst              controllers.ScenarioController.queryHospitalLst()
 POST    /api/proposal/hospital/detail           controllers.ScenarioController.queryHospitalDetail()
 POST    /api/proposal/budget/info               controllers.ScenarioController.queryBudgetProgress()

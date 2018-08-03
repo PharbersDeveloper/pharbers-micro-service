@@ -260,4 +260,22 @@ trait FormatScenarioTrait extends SearchData {
 
         (Some(Map("result" -> toJson(result))), None)
     }
+
+    val formatProposalsCond: String Map JsValue => (Option[String Map JsValue], Option[JsValue]) = { data =>
+
+        val proposals = data("proposals").as[List[Map[String, JsValue]]].map(_("id").as[String])
+        val user_id = data("user").as[Map[String, JsValue]].get("user_id").get
+        val condition = proposals.map(x => {
+            toJson(Map(
+                "user_id" -> toJson(user_id),
+                "proposals" -> toJson(proposals)
+            ))
+        })
+
+        val result = Map(
+            "condition" -> toJson(condition)
+        )
+
+        (Some(Map("data" -> toJson(result))), None)
+    }
 }

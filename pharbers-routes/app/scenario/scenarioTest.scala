@@ -82,11 +82,10 @@ case class scenarios() extends drTrait {
 
     val qcm: JsValue => DBObject = { js =>
         val user_id = (js \ "data" \ "condition" \ "user_id").asOpt[String].get
-        val proposal_id = (js \ "data" \ "condition" \ "proposal_id").asOpt[String].get
 
-        $and(
-            DBObject("user_id" -> user_id),
-            DBObject("proposal_id" -> proposal_id)
-        )
+        (js \ "data" \ "condition" \ "proposals").asOpt[List[String]] match {
+            case None => DBObject("query" -> "none")
+            case Some(ll) => $or(ll map (x => DBObject("user_id" -> user_id, "proposal_id" -> x)))
+        }
     }
 }
