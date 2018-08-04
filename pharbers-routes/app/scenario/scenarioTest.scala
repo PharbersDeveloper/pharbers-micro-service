@@ -8,7 +8,7 @@ import module.common.transform.drTrait
 import com.pharbers.bmpattern.ModuleTrait
 import play.api.libs.json.{JsString, JsValue}
 import module.RepMessage.msg_queryMultiRepByScenario
-import com.pharbers.pharbersmacro.CURDMacro.queryMacro
+import com.pharbers.pharbersmacro.CURDMacro.{queryMacro, queryMultiMacro}
 import module.HospMessage.msg_queryMultiHospByScenario
 import module.GoodsMessage.msg_queryMultiGoodsByScenario
 import module.ResourceMessage.msg_queryMultiResourceByScenario
@@ -53,8 +53,9 @@ object ScenarioModule extends ModuleTrait with FormatScenarioTrait {
         case msg_queryScenario(data: JsValue) =>
             queryMacro(qc, cdr, data, db_name, name)
 
-        case msg_queryMultiScenario(data: JsValue) =>
-            queryMacro(qcm, cdr, data, db_name, name)
+        case msg_queryMultiScenario(data: JsValue) => {
+            queryMultiMacro(qcm, cdr, data, db_name, name)
+        }
 
         case msg_queryQueryHospLst(_: JsValue) =>
             format(pr)(formatHospitals)
