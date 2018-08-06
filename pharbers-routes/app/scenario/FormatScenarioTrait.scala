@@ -260,4 +260,5 @@ trait FormatScenarioTrait extends SearchData {
 
         (Some(Map("result" -> toJson(result))), None)
     }
+
 }

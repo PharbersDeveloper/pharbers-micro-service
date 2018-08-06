@@ -39,4 +39,12 @@
         <host value="123.56.179.133" />
         <port value="18010" />
     </good>
+    <proposal>
+        <host value="123.56.179.133" />
+        <port value="18011" />
+    </proposal>
+    <user-proposal>
+        <host value="123.56.179.133" />
+        <port value="18012" />
+    </user-proposal>
 </pharbers-modules>

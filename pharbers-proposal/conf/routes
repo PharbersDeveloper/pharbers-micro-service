@@ -1,0 +1,10 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+POST    /api/proposal/push              controllers.ProposalController.pushProposal()
+POST    /api/proposal/pop               controllers.ProposalController.popProposal()
+POST    /api/proposal/update            controllers.ProposalController.updateProposal()
+POST    /api/proposal/query             controllers.ProposalController.queryProposal()
+POST    /api/proposal/query/multi       controllers.ProposalController.queryProposalsMulti()
