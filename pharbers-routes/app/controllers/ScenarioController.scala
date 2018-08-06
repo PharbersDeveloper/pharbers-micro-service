@@ -23,13 +23,13 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query hospital list"))), jv) ::
                 msg_tokenParse(jv) ::
                 msg_queryScenarioDetails(jv) :::
-                msg_queryQueryHospLst(jv) ::
-                msg_JsonapiAdapter(jv) ::
+//                msg_queryQueryHospLst(jv) ::
+//                msg_JsonapiAdapter(jv) ::
                 msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 
     def queryHospitalDetail = Action(request => requestArgsQuery().requestArgs(request) { jv =>
-        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query hospital list"))), jv) ::
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query hospital detail"))), jv) ::
                 msg_tokenParse(jv) ::
                 msg_queryScenarioDetails(jv) :::
                 msg_queryHospitalDetail(jv) ::
@@ -43,6 +43,15 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
                 msg_queryScenarioDetails(jv) :::
                 msg_queryBudgetProgress(jv) ::
                 msg_JsonapiAdapter(jv) ::
+                msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+    })
+
+    def allotTask = Action(request => requestArgsQuery().requestArgs(request) { jv =>
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("allot task"))), jv) ::
+                msg_tokenParse(jv) ::
+                msg_current2past(jv) ::
+//                msg_updateDGR(jv) ::
+//                msg_JsonapiAdapter(jv) ::
                 msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 }
