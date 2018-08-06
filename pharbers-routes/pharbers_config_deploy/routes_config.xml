@@ -47,4 +47,8 @@
         <host value="user-proposal" />
         <port value="9000" />
     </user-proposal>
+    <report>
+        <host value="report" />
+        <port value="9000" />
+    </report>
 </pharbers-modules>
