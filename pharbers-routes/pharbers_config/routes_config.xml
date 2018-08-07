@@ -51,4 +51,8 @@
         <host value="123.56.179.133" />
         <port value="18013" />
     </report>
+    <scenario>
+        <host value="127.0.0.1" />
+        <port value="9000" />
+    </scenario>
 </pharbers-modules>

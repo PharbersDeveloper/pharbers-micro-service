@@ -3,4 +3,15 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-POST    /api/scenario/query                 controllers.HospController.queryHosp()
+POST    /api/scenario/push                              controllers.ScenarioController.pushScenario()
+POST    /api/scenario/pop                               controllers.ScenarioController.popScenario()
+POST    /api/scenario/query                             controllers.ScenarioController.queryScenario()
+POST    /api/scenario/query/uuid                        controllers.ScenarioController.queryScenarioByUUID()
+POST    /api/scenario/query/multi                       controllers.ScenarioController.queryMultiScenario()
+POST    /api/scenario/query/multi/byuser/byproposals    controllers.ScenarioController.queryMultiScenarioByUserAndProposal()
+
+POST    /api/scenario/budget/info                       controllers.ScenarioController.queryBudgetProgress()
+POST    /api/scenario/hospital/lst                      controllers.ScenarioController.queryHospitalLst()
+POST    /api/scenario/hospital/detail                   controllers.ScenarioController.queryHospitalDetail()
+POST    /api/scenario/task/allot                        controllers.ScenarioController.allotTask()
+POST    /api/scenario/phase/create                      controllers.ScenarioController.createPhase()

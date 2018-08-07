@@ -1,4 +1,4 @@
-package module.hosp
+package module.scenario
 
 import org.bson.types.ObjectId
 import play.api.libs.json.JsValue
