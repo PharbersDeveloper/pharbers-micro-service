@@ -1,9 +1,12 @@
 package module.scenario
 
-import com.mongodb.casbah.Imports.{DBObject, MongoDBList, MongoDBObject}
+import com.mongodb.casbah.Imports._
+import play.api.libs.json.Json.toJson
 import play.api.libs.json.{JsObject, JsValue}
 
 trait jv2dTrait {
+
+    def jv2d(map: Map[String, JsValue]): DBObject = jv2d(toJson(map))
 
     def jv2d(js: JsValue): DBObject = {
         def connectTransform(key: String, js: JsValue): DBObject = {
