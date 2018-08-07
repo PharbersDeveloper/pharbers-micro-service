@@ -47,4 +47,8 @@
         <host value="123.56.179.133" />
         <port value="18012" />
     </user-proposal>
+    <report>
+        <host value="123.56.179.133" />
+        <port value="18013" />
+    </report>
 </pharbers-modules>
