@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 import akka.actor.ActorSystem
 import play.api.libs.json.Json.toJson
-import module.resources.ReportMessage._
+import module.report.ReportMessage._
 import controllers.common.requestArgsQuery
 import com.pharbers.bmpattern.LogMessage.msg_log
 import com.pharbers.dbManagerTrait.dbInstanceManager

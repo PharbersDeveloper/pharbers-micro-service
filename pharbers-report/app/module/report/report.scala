@@ -1,4 +1,4 @@
-package module.resources
+package module.report
 
 import org.bson.types.ObjectId
 import play.api.libs.json.JsValue

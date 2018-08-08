@@ -1,4 +1,4 @@
-package module.resources
+package module.report
 
 import play.api.libs.json.JsValue
 import com.pharbers.bmmessages.CommonMessage

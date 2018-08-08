@@ -1,10 +1,10 @@
-package module.resources
+package module.report
 
 import module.common.processor
 import module.common.processor._
 import play.api.libs.json.JsValue
 import module.common.stragety.impl
-import module.resources.ReportMessage._
+import module.report.ReportMessage._
 import com.pharbers.bmpattern.ModuleTrait
 import com.pharbers.bmmessages.{CommonModules, MessageDefines}
 
