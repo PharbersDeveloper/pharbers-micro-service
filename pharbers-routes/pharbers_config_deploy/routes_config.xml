@@ -51,4 +51,8 @@
         <host value="report" />
         <port value="9000" />
     </report>
+    <scenario>
+        <host value="scenario" />
+        <port value="9000" />
+    </scenario>
 </pharbers-modules>
