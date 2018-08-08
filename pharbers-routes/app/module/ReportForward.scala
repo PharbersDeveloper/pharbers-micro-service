@@ -48,16 +48,16 @@ object ReportModule extends ModuleTrait {
             (Some(Map("result" -> pr.get("report").asOpt[Map[String, JsValue]].get("summary_report"))), None)
 
         case msg_formatDestsGoodsReport(_) =>
-            (Some(Map("result" -> pr.get("dests_goods_report"))), None)
+            (Some(Map("result" -> pr.get("report").asOpt[Map[String, JsValue]].get("dests_goods_report"))), None)
 
         case msg_formatRepGoodsReport(_) =>
-            (Some(Map("result" -> pr.get("rep_goods_report"))), None)
+            (Some(Map("result" -> pr.get("report").asOpt[Map[String, JsValue]].get("rep_goods_report"))), None)
 
         case msg_formatResoAllocation(_) =>
-            (Some(Map("result" -> pr.get("reso_allocation_report"))), None)
+            (Some(Map("result" -> pr.get("report").asOpt[Map[String, JsValue]].get("reso_allocation_report"))), None)
 
         case msg_formatRepIndResos(_) =>
-            (Some(Map("result" -> pr.get("rep_ind_resos"))), None)
+            (Some(Map("result" -> pr.get("report").asOpt[Map[String, JsValue]].get("rep_ind_resos"))), None)
 
         case _ => ???
     }
