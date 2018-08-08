@@ -74,8 +74,8 @@ class scenario extends basemodel with drTrait with jv2dTrait {
         val proposal_id = (jsValue \ "scenario" \ "proposal_id").asOpt[JsString].getOrElse(throw new Exception("request not find proposal_id")).value
         val current = (jsValue \ "scenario" \ "current").asOpt[JsValue].getOrElse(throw new Exception("request not find current"))
         val current_phase = (jsValue \ "scenario" \ "current" \ "phase").as[Int]
+        val total_phase = (jsValue \ "scenario" \ "total_phase").as[Int]
         val past = (jsValue \ "scenario" \ "past").asOpt[List[JsValue]].getOrElse(throw new Exception("request not find past"))
-
 
         val builder = MongoDBObject.newBuilder
         builder += "_id" -> ObjectId.get()                   // object_id 唯一标示
@@ -84,6 +84,7 @@ class scenario extends basemodel with drTrait with jv2dTrait {
         builder += "proposal_id" -> proposal_id
         builder += "timestamp" -> new Date().getTime
         builder += "current_phase" -> int2Integer(current_phase)
+        builder += "total_phase" -> int2Integer(total_phase)
         builder += "current" -> jv2d(current)
         builder += "past" -> MongoDBList(past.map(jv2d): _*).underlying
 
