@@ -12,6 +12,7 @@ import controllers.common.JsonapiAdapter.msg_JsonapiAdapter
 import com.pharbers.bmmessages.{CommonModules, MessageRoutes}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import com.pharbers.bmpattern.ResultMessage.msg_CommonResultMessage
+import module.ReportMessage.msg_queryReport
 
 class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject: ActorSystem, dbt: dbInstanceManager) extends AbstractController(cc) {
 
@@ -57,8 +58,10 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
     def createPhase = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("create new phase"))), jv) ::
                 msg_tokenParse(jv) ::
-                msg_createPhase(jv) ::
-                msg_JsonapiAdapter(jv) ::
+                msg_queryReport(jv) ::
+                msg_queryScenario(jv) ::
+//                msg_createPhase(jv) ::
+//                msg_JsonapiAdapter(jv) ::
                 msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 }

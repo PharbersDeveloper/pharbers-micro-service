@@ -17,7 +17,7 @@ object ReportModule extends ModuleTrait {
 
     override def dispatchMsg(msg: MessageDefines)(pr: Option[Map[String, JsValue]])
                             (implicit cm: CommonModules): (Option[Map[String, JsValue]], Option[JsValue]) = msg match {
-        case msg_queryReport(data: JsValue) => processor(value => returnValue(query(value)(names)))(data)
+        case msg_queryReport(data: JsValue) => processor(value => returnValue(query(value)(names), name))(data)
 
         case _ => ???
     }

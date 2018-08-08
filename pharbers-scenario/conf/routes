@@ -14,4 +14,4 @@ POST    /api/scenario/budget/info                       controllers.ScenarioCont
 POST    /api/scenario/hospital/lst                      controllers.ScenarioController.queryHospitalLst()
 POST    /api/scenario/hospital/detail                   controllers.ScenarioController.queryHospitalDetail()
 POST    /api/scenario/task/allot                        controllers.ScenarioController.allotTask()
-POST    /api/scenario/phase/create                      controllers.ScenarioController.createPhase()
+POST    /api/scenario/phase/next                        controllers.ScenarioController.createPhase()

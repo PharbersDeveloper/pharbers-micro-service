@@ -53,6 +53,6 @@
     </report>
     <scenario>
         <host value="127.0.0.1" />
-        <port value="9000" />
+        <port value="9001" />
     </scenario>
 </pharbers-modules>

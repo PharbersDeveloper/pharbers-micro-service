@@ -11,7 +11,7 @@ POST    /api/proposal/budget/info               controllers.ScenarioController.q
 POST    /api/proposal/hospital/lst              controllers.ScenarioController.queryHospitalLst()
 POST    /api/proposal/hospital/detail           controllers.ScenarioController.queryHospitalDetail()
 POST    /api/proposal/task/allot                controllers.ScenarioController.allotTask()
-POST    /api/proposal/phase/create              controllers.ScenarioController.createPhase()
+POST    /api/proposal/phase/next                controllers.ScenarioController.createPhase()
 
 # 生成报告信息
 POST    /api/report/total                       controllers.ReportController.queryTotalReport()

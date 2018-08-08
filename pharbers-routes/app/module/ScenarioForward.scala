@@ -51,7 +51,7 @@ object ScenarioModule extends ModuleTrait {
                             (implicit cm: CommonModules): (Option[Map[String, JsValue]], Option[JsValue]) = msg match {
 
         case msg_queryScenario(data: JsValue) =>
-            repeater((d, _) => forward("/api/scenario/query/uuid").post(d))(onlyResult)(data, pr)
+            repeater((d, _) => forward("/api/scenario/query/uuid").post(d))(mergeResult)(data, pr)
 
         case msg_queryBudgetProgress(data: JsValue) =>
             repeater((_, p) => forward("/api/scenario/budget/info").post(toJson(p)))(onlyResult)(data, pr)

@@ -42,11 +42,10 @@ object ReportModule extends ModuleTrait {
     (implicit cm: CommonModules): (Option[Map[String, JsValue]], Option[JsValue]) = msg match {
 
         case msg_queryReport(data: JsValue) =>
-            repeater((d, _) =>
-                forward("/api/report/query").post(d))(onlyResult)(data, pr)
+            repeater((d, _) => forward("/api/report/query").post(d))(mergeResult)(data, pr)
 
         case msg_formatTotalReport(_) =>
-            (Some(Map("result" -> pr.get("summary_report"))), None)
+            (Some(Map("result" -> pr.get("report").asOpt[Map[String, JsValue]].get("summary_report"))), None)
 
         case msg_formatDestsGoodsReport(_) =>
             (Some(Map("result" -> pr.get("dests_goods_report"))), None)
