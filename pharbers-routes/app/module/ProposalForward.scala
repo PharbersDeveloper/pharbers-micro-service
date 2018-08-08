@@ -113,16 +113,6 @@ case class proposal() extends phForward with drTrait {
         ))
     }
 
-    // query multi condition scenario
-    val qcmScenarios: JsValue => DBObject = { js =>
-        val user_id = (js \ "data" \ "condition" \ "user_id").asOpt[String].get
-
-        (js \ "data" \ "condition" \ "proposals").asOpt[List[String]] match {
-            case None => DBObject("query" -> "none")
-            case Some(ll) => $or(ll map (x => DBObject("user_id" -> user_id, "proposal_id" -> x)))
-        }
-    }
-
     // 关卡列表, 多余信息过滤
     def formatProposalWithScenario(pr: Option[Map[String, JsValue]]): (Option[Map[String, JsValue]], Option[JsValue]) = {
         val proposals = pr.get("proposals").as[List[Map[String, JsValue]]].map{ m =>
