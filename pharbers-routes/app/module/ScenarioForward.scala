@@ -66,7 +66,7 @@ object ScenarioModule extends ModuleTrait {
             repeater((d, _) => forward("/api/scenario/task/allot").post(d))(onlyResult)(data, pr)
 
         case msg_createPhase(data: JsValue) =>
-            repeater((_, p) => forward("/api/scenario/phase/create").post(toJson(p)))(onlyResult)(data, pr)
+            repeater((d, p) => forward("/api/scenario/phase/next").post(toJson(d.as[Map[String, JsValue]] ++ p.get)))(onlyResult)(data, pr)
 
         case _ => ???
     }

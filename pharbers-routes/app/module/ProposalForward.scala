@@ -34,6 +34,8 @@ object ProposalMessage {
 
     case class msg_queryProposalMulti(data: JsValue) extends msg_ProposalCommand
 
+    case class msg_queryProposalByScenario(data: JsValue) extends msg_ProposalCommand
+
     case class msg_queryProposalWithScenario(data: JsValue) extends msg_ProposalCommand
 
 }
@@ -70,6 +72,9 @@ object ProposalModule extends ModuleTrait {
         case msg_queryProposalByBind(data: JsValue) =>
             repeater((_, p) => forward("/api/proposal/query/multi").post(mergePBC(p)))(mergeResult)(data, pr)
 
+        case msg_queryProposalByScenario(data: JsValue) =>
+            repeater((_, p) => forward("/api/proposal/query").post(qpByS(p)))(mergeResult)(data, pr)
+
         case msg_queryProposalWithScenario(_) =>
             formatProposalWithScenario(pr)
 
@@ -87,9 +92,22 @@ case class proposal() extends phForward with drTrait {
 
         toJson(Map(
             "data" -> toJson(Map(
-                "type" -> toJson("proposal"),
+                "type" -> toJson("proposals"),
                 "condition" -> toJson(Map(
                     "proposals" -> toJson(ids)
+                ))
+            ))
+        ))
+    }
+
+    val qpByS: Option[Map[String, JsValue]] => JsValue = { pr =>
+        val proposal_id = pr.get("scenario").asOpt[Map[String, JsValue]].get("proposal_id")
+
+        toJson(Map(
+            "data" -> toJson(Map(
+                "type" -> toJson("proposal"),
+                "condition" -> toJson(Map(
+                    "proposal_id" -> toJson(proposal_id)
                 ))
             ))
         ))
