@@ -12,7 +12,8 @@ import module.User2PrpodsalMessage.msg_queryUserProposalBind
 import com.pharbers.bmmessages.{CommonModules, MessageRoutes}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import com.pharbers.bmpattern.ResultMessage.msg_CommonResultMessage
-import module.ProposalMessage.{msg_queryProposalByBind, msg_queryProposalWithScenario}
+import module.ProposalMessage.{msg_queryProposalByBind, msg_formatProposalWithScenario}
+import module.ScenarioMessage.msg_queryScenarioByUserAndProposal
 
 class ProposalController @Inject()(implicit cc: ControllerComponents, as_inject: ActorSystem, dbt: dbInstanceManager) extends AbstractController(cc) {
 
@@ -25,7 +26,8 @@ class ProposalController @Inject()(implicit cc: ControllerComponents, as_inject:
                 :: msg_tokenParse(jv)
                 :: msg_queryUserProposalBind(jv)
                 :: msg_queryProposalByBind(jv)
-                :: msg_queryProposalWithScenario(jv)
+                :: msg_queryScenarioByUserAndProposal(jv)
+                :: msg_formatProposalWithScenario(jv)
                 :: msg_JsonapiAdapter(jv)
                 :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })

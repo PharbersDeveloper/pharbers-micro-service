@@ -29,6 +29,8 @@ object ScenarioMessage {
 
     case class msg_queryScenario(data: JsValue) extends msg_ScenarioCommand
 
+    case class msg_queryScenarioByUserAndProposal(data: JsValue) extends msg_ScenarioCommand
+
     case class msg_queryBudgetProgress(data: JsValue) extends msg_ScenarioCommand
 
     case class msg_queryQueryHospLst(data: JsValue) extends msg_ScenarioCommand
@@ -38,20 +40,21 @@ object ScenarioMessage {
     case class msg_allotTask(data: JsValue) extends msg_ScenarioCommand
 
     case class msg_createPhase(data: JsValue) extends msg_ScenarioCommand
+
 }
 
 object ScenarioModule extends ModuleTrait {
-    val scenario: phForward = new phForward {
-        override lazy val module_name: String = "scenario"
-    }
-
-    import scenario._
+    val s = scenario()
+    import s._
 
     override def dispatchMsg(msg: MessageDefines)(pr: Option[Map[String, JsValue]])
                             (implicit cm: CommonModules): (Option[Map[String, JsValue]], Option[JsValue]) = msg match {
 
         case msg_queryScenario(data: JsValue) =>
             repeater((d, _) => forward("/api/scenario/query/uuid").post(d))(mergeResult)(data, pr)
+
+        case msg_queryScenarioByUserAndProposal(data: JsValue) =>
+            repeater((_, p) => forward("/api/scenario/query/multi/byuser/byproposals").post(cond(p)))(mergeResult)(data, pr)
 
         case msg_queryBudgetProgress(data: JsValue) =>
             repeater((_, p) => forward("/api/scenario/budget/info").post(toJson(p)))(onlyResult)(data, pr)
@@ -72,3 +75,19 @@ object ScenarioModule extends ModuleTrait {
     }
 }
 
+case class scenario() extends phForward {
+    override lazy val module_name: String = "scenario"
+
+    val cond: Option[Map[String, JsValue]] => JsValue = { pr =>
+        val user_id = (pr.get("user") \ "user_id").as[String]
+        val proposals = pr.get("proposals").as[List[Map[String, JsValue]]].map(_ ("id").as[String])
+        toJson(Map(
+            "data" -> toJson(Map(
+                "condition" -> toJson(Map(
+                    "user_id" -> toJson(user_id),
+                    "proposals" -> toJson(proposals)
+                ))
+            ))
+        ))
+    }
+}

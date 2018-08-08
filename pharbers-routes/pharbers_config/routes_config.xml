@@ -48,15 +48,11 @@
         <port value="18012" />
     </user-proposal>
     <report>
-        <host value="127.0.0.1" />
-        <port value="9002" />
-    </report>
-    <report2>
         <host value="123.56.179.133" />
         <port value="18013" />
-    </report2>
+    </report>
     <scenario>
-        <host value="127.0.0.1" />
-        <port value="9001" />
+        <host value="123.56.179.133" />
+        <port value="18014" />
     </scenario>
 </pharbers-modules>
