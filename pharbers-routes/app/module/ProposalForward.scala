@@ -36,7 +36,7 @@ object ProposalMessage {
 
     case class msg_queryProposalByScenario(data: JsValue) extends msg_ProposalCommand
 
-    case class msg_queryProposalWithScenario(data: JsValue) extends msg_ProposalCommand
+    case class msg_formatProposalWithScenario(data: JsValue) extends msg_ProposalCommand
 
 }
 
@@ -75,7 +75,7 @@ object ProposalModule extends ModuleTrait {
         case msg_queryProposalByScenario(data: JsValue) =>
             repeater((_, p) => forward("/api/proposal/query").post(qpByS(p)))(mergeResult)(data, pr)
 
-        case msg_queryProposalWithScenario(_) =>
+        case msg_formatProposalWithScenario(_) =>
             formatProposalWithScenario(pr)
 
         case _ => ???
@@ -123,37 +123,27 @@ case class proposal() extends phForward with drTrait {
         }
     }
 
-    def formatProposalWithScenario(pr: Option[Map[String, JsValue]])(implicit cm: CommonModules): (Option[Map[String, JsValue]], Option[JsValue]) = {
-        val proposals = pr.get("proposals").as[List[Map[String, JsValue]]]
-        val user_id = pr.get("user").asOpt[Map[String, JsValue]].get("user_id")
-        val qdata = toJson(Map(
-            "data" -> toJson(Map(
-                "condition" -> toJson(Map(
-                    "user_id" -> toJson(user_id),
-                    "proposals" -> toJson(proposals.map(_("id").as[String]))
-                ))
-            ))
-        ))
-        val scenarios = queryMultiMacro(qcmScenarios, cdr, qdata, "scenarios", "scenarios")
-        val scenarios_lst = scenarios._1 match {
-            case None => List.empty
-            case Some(x) => x("scenarios").as[JsArray].value.map(j =>
-                Map("proposal_id" -> (j \ "proposal_id").get, "uuid" -> (j \ "uuid").get, "timestamp" -> (j \ "timestamp").get)).toList
-                .sortBy(-_("timestamp").asInstanceOf[JsNumber].value)
-        }
-        val result = scenarios_lst match {
-            case Nil => None
-            case _ =>
-                val plst = proposals.map(proposal =>{
-                    val uuid = scenarios_lst.find(x => x("proposal_id") == proposal("id")) match {
-                        case Some(a) => a("uuid")
-                        case None => toJson("none")
-                    }
-                    proposal ++ Map("uuid" -> uuid) - "id"
-                })
-                Some(Map("result" -> toJson(plst)))
+    // 关卡列表, 多余信息过滤
+    def formatProposalWithScenario(pr: Option[Map[String, JsValue]]): (Option[Map[String, JsValue]], Option[JsValue]) = {
+        val proposals = pr.get("proposals").as[List[Map[String, JsValue]]].map{ m =>
+            m - "scenarios"
         }
 
-        (result, None)
+        val scenarios = pr.get("scenarios").as[List[Map[String, JsValue]]].map{ m =>
+            Map(
+                "uuid" -> m("uuid"),
+                "proposal_id" -> m("proposal_id")
+            )
+        }
+
+        val result = proposals.map{p =>
+            val uuid = scenarios.find(_("proposal_id") == p("id")) match {
+                case None => toJson("none")
+                case Some(x) => x("uuid")
+            }
+            p ++ Map("uuid" -> uuid)
+        }
+
+        (Some(Map("result" -> toJson(result))), None)
     }
 }
