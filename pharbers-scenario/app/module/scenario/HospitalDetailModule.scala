@@ -59,7 +59,8 @@ object HospitalDetailModule extends ModuleTrait {
                 val target_med_relationship = target_med("relationship").as[Map[String, JsValue]]
                 val pre_target_dest_goods_relationship = pre_dest_goods.filter(_ ("dest_id") == target_hosp_id)
                         .find(_ ("goods_id") == target_med("goods_id"))
-                        .get("relationship").as[Map[String, JsValue]]
+                        .map(_("relationship").as[Map[String, JsValue]])
+
                 val overview = List(
                     Map(
                         "key" -> toJson("药品市场潜力"),
@@ -71,19 +72,20 @@ object HospitalDetailModule extends ModuleTrait {
                     ),
                     Map(
                         "key" -> toJson("上期销售额"),
-                        "value" -> pre_target_dest_goods_relationship("sales")
+                        "value" -> pre_target_dest_goods_relationship.map(_("sales")).getOrElse(toJson(0L))
+
                     ),
                     Map(
                         "key" -> toJson("上期增长"),
-                        "value" -> pre_target_dest_goods_relationship("sales_growth")
+                        "value" -> pre_target_dest_goods_relationship.map(_("sales_growth")).getOrElse(toJson(0.0))
                     ),
                     Map(
                         "key" -> toJson("份额"),
-                        "value" -> pre_target_dest_goods_relationship("share")
+                        "value" -> pre_target_dest_goods_relationship.map(_("share")).getOrElse(toJson(0.0))
                     ),
                     Map(
                         "key" -> toJson("上期贡献率"),
-                        "value" -> pre_target_dest_goods_relationship("contri_rate")
+                        "value" -> pre_target_dest_goods_relationship.map(_("contri_rate")).getOrElse(toJson(0.0))
                     )
                 )
 
