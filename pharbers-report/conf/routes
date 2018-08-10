@@ -4,3 +4,5 @@
 # ~~~~
 
 POST    /api/report/query             controllers.ReportController.queryReport()
+
+POST    /api/assess-report/query      controllers.ReportController.queryAssessReport()
