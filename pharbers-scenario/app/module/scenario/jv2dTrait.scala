@@ -30,10 +30,6 @@ trait jv2dTrait {
 
         def destTransform(js: JsValue): DBObject = connectTransform("connect_dest", js)
 
-        def repTransform(js: JsValue): DBObject = connectTransform("connect_rep", js)
-
-        def goodsTransform(js: JsValue): DBObject = connectTransform("connect_goods", js)
-
         def resourceTransform(js: JsValue): DBObject = {
             val connect_reso = (js \ "connect_reso").as[List[Map[String, JsValue]]]
             val day = connect_reso.find(_ ("type").as[String] == "day").map { x =>
@@ -62,23 +58,35 @@ trait jv2dTrait {
                 )
             }.get
 
-            DBObject("connect_reso" -> MongoDBList(day, money).underlying)
+            val manager = connect_reso.find(_ ("type").as[String] == "manager").map { x =>
+                val relationship = x("relationship").asOpt[Map[String, JsValue]]
+                        .getOrElse(Map(
+                            "kpi_analysis" -> toJson(0),
+                            "admin_work" -> toJson(0),
+                            "team_meet" -> toJson(0),
+                            "field_work" -> toJson(0),
+                            "sales_train" -> toJson(0)
+                        ))
+
+                DBObject(
+                    "type" -> x("type").as[String],
+                    "id" -> x("id").as[String],
+                    "relationship" -> DBObject(
+                        "kpi_analysis" -> int2Integer(relationship("kpi_analysis").as[Int]),
+                        "admin_work" -> int2Integer(relationship("admin_work").as[Int]),
+                        "team_meet" -> int2Integer(relationship("team_meet").as[Int]),
+                        "field_work" -> int2Integer(relationship("field_work").as[Int]),
+                        "sales_train" -> int2Integer(relationship("sales_train").as[Int])
+                    )
+                )
+            }.get
+
+            DBObject("connect_reso" -> MongoDBList(day, money, manager).underlying)
         }
 
-        def destRepTransform(js: JsValue): DBObject = {
-            (js \ "dest_rep").asOpt[List[Map[String, JsValue]]] match {
-                case Some(lst) =>
-                    val tmp = lst.map { m =>
-                        val builder = MongoDBObject.newBuilder
-                        builder += "dest_id" -> m("dest_id").as[String]
-                        builder += "rep_id" -> m("rep_id").as[String]
-                        builder += "relationship" -> DBObject()
-                        builder.result
-                    }
-                    DBObject("dest_rep" -> MongoDBList(tmp: _*).underlying)
-                case None => DBObject()
-            }
-        }
+        def repTransform(js: JsValue): DBObject = connectTransform("connect_rep", js)
+
+        def goodsTransform(js: JsValue): DBObject = connectTransform("connect_goods", js)
 
         def destGoodsTransform(js: JsValue): DBObject = {
             val tmp = (js \ "dest_goods").as[List[Map[String, JsValue]]].map { m =>
@@ -139,20 +147,43 @@ trait jv2dTrait {
             }
         }
 
+        def resoRepTransform(js: JsValue): DBObject = {
+            (js \ "reso_rep").asOpt[List[Map[String, JsValue]]] match {
+                case Some(lst) =>
+                    val tmp = lst.map { m =>
+                        val relationship = m("relationship").asOpt[Map[String, JsValue]]
+                        val tmp = DBObject(
+                            "field_work" -> int2Integer(relationship.get("field_work").as[Int]),
+                            "sales_train" -> int2Integer(relationship.get("sales_train").as[Int]),
+                            "product_train" -> int2Integer(relationship.get("product_train").as[Int]),
+                            "team_meet" -> int2Integer(relationship.get("team_meet").as[Int])
+                        )
+                        val builder = MongoDBObject.newBuilder
+                        builder += "reso_id" -> m("reso_id").as[String]
+                        builder += "rep_id" -> m("rep_id").as[String]
+                        builder += "relationship" -> tmp
+                        builder.result
+                    }
+                    DBObject("reso_rep" -> MongoDBList(tmp: _*).underlying)
+                case None => DBObject()
+            }
+        }
+
         val builder = MongoDBObject.newBuilder
 
         builder += "phase" -> int2Integer((js \ "phase").as[Int])
         builder += "name" -> (js \ "name").as[String]
         builder += "report_id" -> (js \ "report_id").as[String]
+        builder += "report_style" -> (js \ "report_style").as[String]
 
         builder ++= destTransform(js)
+        builder ++= resourceTransform(js)
         builder ++= repTransform(js)
         builder ++= goodsTransform(js)
-        builder ++= resourceTransform(js)
 
-        builder ++= destRepTransform(js)
         builder ++= destGoodsTransform(js)
         builder ++= destGoodsRepTransform(js)
+        builder ++= resoRepTransform(js)
 
         builder.result
     }

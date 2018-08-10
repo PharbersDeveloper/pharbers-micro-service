@@ -10,6 +10,9 @@ import controllers.common.requestArgsQuery
 import javax.inject.Inject
 import module.AuthMessage.msg_tokenParse
 import module.ReportMessage._
+import module.ScenarioMessage.msg_queryScenario
+import module.StyleColumnMessage.msg_queryStyleColumn
+import module.StyleWhichMessage.msg_queryStyleWhichByScenario
 import play.api.libs.json.Json.toJson
 import play.api.mvc.{AbstractController, ControllerComponents}
 
@@ -25,48 +28,67 @@ class ReportController @Inject()(implicit cc: ControllerComponents, as_inject: A
     import com.pharbers.bmpattern.ResultMessage.common_result
     import controllers.common.JsonapiAdapter.jsonapi_adapter
 
+    def queryReportWhich = Action(request => requestArgsQuery().requestArgs(request) { jv =>
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query report which"))), jv)
+                :: msg_tokenParse(jv)
+                :: msg_queryScenario(jv)
+                :: msg_queryStyleWhichByScenario(jv)
+                :: msg_JsonapiAdapter(jv)
+                :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+    })
+
     def queryTotalReport = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query report total"))), jv)
-            :: msg_tokenParse(jv)
-            :: msg_queryReport(jv)
-            :: msg_formatTotalReport(jv)
-            :: msg_JsonapiAdapter(jv)
-            :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+                :: msg_tokenParse(jv)
+                :: msg_queryScenario(jv)
+                :: msg_queryReportByScenario(jv)
+                :: msg_queryStyleColumn(jv)
+                :: msg_formatTotalReport(jv)
+                :: msg_JsonapiAdapter(jv)
+                :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 
     def queryDestsGoodsReport = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query report DestsGoods"))), jv)
-            :: msg_tokenParse(jv)
-            :: msg_queryReport(jv)
-            :: msg_formatDestsGoodsReport(jv)
-            :: msg_JsonapiAdapter(jv)
-            :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+                :: msg_tokenParse(jv)
+                :: msg_queryScenario(jv)
+                :: msg_queryReportByScenario(jv)
+                :: msg_queryStyleColumn(jv)
+                :: msg_formatDestsGoodsReport(jv)
+                :: msg_JsonapiAdapter(jv)
+                :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 
     def queryRepGoodsReport = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query report RepGoods"))), jv)
-            :: msg_tokenParse(jv)
-            :: msg_queryReport(jv)
-            :: msg_formatRepGoodsReport(jv)
-            :: msg_JsonapiAdapter(jv)
-            :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+                :: msg_tokenParse(jv)
+                :: msg_queryScenario(jv)
+                :: msg_queryReportByScenario(jv)
+                :: msg_queryStyleColumn(jv)
+                :: msg_formatRepGoodsReport(jv)
+                :: msg_JsonapiAdapter(jv)
+                :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 
     def queryResoAllocation = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query ResoAllocation"))), jv)
-            :: msg_tokenParse(jv)
-            :: msg_queryReport(jv)
-            :: msg_formatResoAllocation(jv)
-            :: msg_JsonapiAdapter(jv)
-            :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+                :: msg_tokenParse(jv)
+                :: msg_queryScenario(jv)
+                :: msg_queryReportByScenario(jv)
+                :: msg_queryStyleColumn(jv)
+                :: msg_formatResoAllocation(jv)
+                :: msg_JsonapiAdapter(jv)
+                :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 
     def queryRepIndResos = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query RepIndResos"))), jv)
-            :: msg_tokenParse(jv)
-            :: msg_queryReport(jv)
-            :: msg_formatRepIndResos(jv)
-            :: msg_JsonapiAdapter(jv)
-            :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+                :: msg_tokenParse(jv)
+                :: msg_queryScenario(jv)
+                :: msg_queryReportByScenario(jv)
+                :: msg_queryStyleColumn(jv)
+                :: msg_formatRepIndResos(jv)
+                :: msg_JsonapiAdapter(jv)
+                :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 }

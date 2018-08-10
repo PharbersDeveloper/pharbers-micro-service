@@ -13,13 +13,24 @@ import com.pharbers.bmmessages.{CommonModules, MessageRoutes}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import com.pharbers.bmpattern.ResultMessage.msg_CommonResultMessage
 import module.ProposalMessage.msg_queryProposalByScenario
-import module.ReportMessage.msg_queryReport
+import module.ReportMessage.msg_queryReportByScenario
 
 class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject: ActorSystem, dbt: dbInstanceManager) extends AbstractController(cc) {
 
     import com.pharbers.bmpattern.LogMessage.common_log
     import com.pharbers.bmpattern.ResultMessage.common_result
     import controllers.common.JsonapiAdapter.jsonapi_adapter
+
+    def createSecnario = Action(request => requestArgsQuery().requestArgs(request) { jv =>
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("create new scenario"))), jv) ::
+                msg_tokenParse(jv) ::
+                msg_queryReportByScenario(jv) ::
+                msg_queryScenario(jv) ::
+                msg_queryProposalByScenario(jv) ::
+                msg_createPhase(jv) ::
+                msg_JsonapiAdapter(jv) ::
+                msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+    })
 
     def queryBudgetProgress = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query budget info"))), jv) ::
@@ -59,7 +70,7 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
     def createPhase = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("create new phase"))), jv) ::
                 msg_tokenParse(jv) ::
-                msg_queryReport(jv) ::
+                msg_queryReportByScenario(jv) ::
                 msg_queryScenario(jv) ::
                 msg_queryProposalByScenario(jv) ::
                 msg_createPhase(jv) ::

@@ -55,4 +55,12 @@
         <host value="123.56.179.133" />
         <port value="18014" />
     </scenario>
+    <style-column>
+        <host value="123.56.179.133" />
+        <port value="18015" />
+    </style-column>
+    <style-which>
+        <host value="123.56.179.133" />
+        <port value="18016" />
+    </style-which>
 </pharbers-modules>
