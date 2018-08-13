@@ -9,5 +9,9 @@ import com.pharbers.bmmessages.CommonMessage
 abstract class msg_ReportCommand extends CommonMessage("report", ReportModule)
 
 object ReportMessage {
+
     case class msg_queryReport(data: JsValue) extends msg_ReportCommand
+
+    case class msg_queryAssessReport(data: JsValue) extends msg_ReportCommand
+
 }

@@ -25,4 +25,10 @@ class ReportController @Inject()(implicit cc: ControllerComponents, as_inject: A
                 :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 
+    def queryAssessReport= Action(request => requestArgsQuery().requestArgs(request) { jv =>
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query assess report"))), jv)
+            :: msg_queryAssessReport(jv)
+            :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+    })
+
 }

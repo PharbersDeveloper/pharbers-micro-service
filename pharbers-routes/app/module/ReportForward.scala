@@ -33,6 +33,9 @@ object ReportMessage {
 
     case class msg_formatRepIndResos(data: JsValue) extends msg_ReportCommand
 
+    case class msg_queryAssessReport(data: JsValue) extends msg_ReportCommand
+
+    case class msg_formatAssessReport(data: JsValue) extends msg_ReportCommand
 
 }
 
@@ -63,6 +66,12 @@ object ReportModule extends ModuleTrait {
 
         case msg_formatRepIndResos(_) =>
             mergeReportColumn("rep_ind_resos", pr)
+
+        case msg_queryAssessReport(data: JsValue) =>
+            repeater((d, _) => forward("/api/assess-report/query").post(d))(mergeResult)(data, pr)
+
+        case msg_formatAssessReport(_) =>
+            (Some(Map("result" -> toJson(pr.get("assess_report").asOpt[Map[String, JsValue]].get))), None)
 
         case _ => ???
     }

@@ -21,3 +21,4 @@ POST    /api/report/dests_goods                 controllers.ReportController.que
 POST    /api/report/rep_goods                   controllers.ReportController.queryRepGoodsReport()
 POST    /api/report/reso_allocation             controllers.ReportController.queryResoAllocation()
 POST    /api/report/rep_ind_resos               controllers.ReportController.queryRepIndResos()
+POST    /api/assess-report/query                controllers.ReportController.queryAssessReport()
