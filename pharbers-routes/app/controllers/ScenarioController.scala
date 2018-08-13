@@ -14,6 +14,7 @@ import com.pharbers.bmmessages.{CommonModules, MessageRoutes}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import com.pharbers.bmpattern.ResultMessage.msg_CommonResultMessage
 import module.ProposalMessage.{msg_queryProposal, msg_queryProposalByScenario}
+import module.RepMessage.{msg_formatRepInfo, msg_queryMultiRepByScenario}
 
 class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject: ActorSystem, dbt: dbInstanceManager) extends AbstractController(cc) {
 
@@ -35,6 +36,16 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
                 msg_tokenParse(jv) ::
                 msg_queryScenarioDetails(jv) :::
                 msg_queryBudgetProgress(jv) ::
+                msg_JsonapiAdapter(jv) ::
+                msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+    })
+
+    def queryRepInfo = Action(request => requestArgsQuery().requestArgs(request) { jv =>
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query rep info"))), jv) ::
+                msg_tokenParse(jv) ::
+                msg_queryScenario(jv) ::
+                msg_queryMultiRepByScenario(jv) ::
+                msg_formatRepInfo(jv) ::
                 msg_JsonapiAdapter(jv) ::
                 msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })

@@ -9,6 +9,7 @@ POST    /api/proposal/lst                       controllers.ProposalController.q
 
 POST    /api/proposal/scenario/create           controllers.ScenarioController.createSecnario()
 POST    /api/proposal/budget/info               controllers.ScenarioController.queryBudgetProgress()
+POST    /api/proposal/rep/info                  controllers.ScenarioController.queryRepInfo()
 POST    /api/proposal/hospital/lst              controllers.ScenarioController.queryHospitalLst()
 POST    /api/proposal/hospital/detail           controllers.ScenarioController.queryHospitalDetail()
 POST    /api/proposal/task/allot                controllers.ScenarioController.allotTask()
