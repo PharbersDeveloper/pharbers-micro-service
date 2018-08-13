@@ -32,7 +32,6 @@ object CreatePhaseModule extends ModuleTrait with jv2dTrait {
         val dest_goods = current.get("dest_goods").asInstanceOf[BasicDBList]
                 .toList.map(_.asInstanceOf[DBObject])
 
-        val report_id = (js \ "report" \ "id").as[String]
         val dests_goods_report = (js \ "report" \ "dests_goods_report" \ "value").as[List[Map[String, JsValue]]]
         val compete_report = (js \ "report" \ "compete_report").as[List[Map[String, JsValue]]]
 
@@ -70,7 +69,6 @@ object CreatePhaseModule extends ModuleTrait with jv2dTrait {
         }
 
         current += "dest_goods" -> tmp
-        current += "report_id" -> report_id
         obj += "current" -> current
         obj
     }

@@ -24,13 +24,13 @@ object HospitalListModule extends ModuleTrait {
             val current_phase = current("phase").as[Int]
 
             val current_dests = current("connect_dest").as[List[String Map JsValue]]
-            val current_dest_rep = current("dest_rep").as[List[String Map JsValue]]
             val current_dest_goods = current("dest_goods").as[List[String Map JsValue]]
+            val current_dest_goods_rep = current("dest_goods_rep").as[List[String Map JsValue]]
             val pre_dest_goods = past.find(p => p("phase").as[Int] == current_phase - 1)
                     .get("dest_goods").as[List[Map[String, JsValue]]]
 
             val result = current_dests.map { c_dest =>
-                val repLst = current_dest_rep.filter(x => x("dest_id") == c_dest("id"))
+                val repLst = current_dest_goods_rep.filter(x => x("dest_id") == c_dest("id"))
                         .map(_ ("rep_id"))
                         .map(id => reps.find(rep => rep("id") == id).get)
 

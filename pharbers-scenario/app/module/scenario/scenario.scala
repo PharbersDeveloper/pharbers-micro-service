@@ -85,6 +85,7 @@ class scenario extends basemodel with drTrait with jv2dTrait {
         builder += "timestamp" -> new Date().getTime
         builder += "current_phase" -> int2Integer(current_phase)
         builder += "total_phase" -> int2Integer(total_phase)
+        builder += "assess_report" -> ""
         builder += "current" -> jv2d(current)
         builder += "past" -> MongoDBList(past.map(jv2d): _*).underlying
 

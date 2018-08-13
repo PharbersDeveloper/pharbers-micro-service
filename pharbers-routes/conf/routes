@@ -7,13 +7,16 @@ POST    /api/user/login                         controllers.UserController.userL
 
 POST    /api/proposal/lst                       controllers.ProposalController.queryProposalLst()
 
+POST    /api/proposal/scenario/create           controllers.ScenarioController.createSecnario()
 POST    /api/proposal/budget/info               controllers.ScenarioController.queryBudgetProgress()
+POST    /api/proposal/rep/info                  controllers.ScenarioController.queryRepInfo()
 POST    /api/proposal/hospital/lst              controllers.ScenarioController.queryHospitalLst()
 POST    /api/proposal/hospital/detail           controllers.ScenarioController.queryHospitalDetail()
 POST    /api/proposal/task/allot                controllers.ScenarioController.allotTask()
 POST    /api/proposal/phase/next                controllers.ScenarioController.createPhase()
 
 # 生成报告信息
+POST    /api/report/which                       controllers.ReportController.queryReportWhich()
 POST    /api/report/total                       controllers.ReportController.queryTotalReport()
 POST    /api/report/dests_goods                 controllers.ReportController.queryDestsGoodsReport()
 POST    /api/report/rep_goods                   controllers.ReportController.queryRepGoodsReport()

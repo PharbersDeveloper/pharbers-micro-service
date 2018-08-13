@@ -55,4 +55,12 @@
         <host value="scenario" />
         <port value="9000" />
     </scenario>
+    <style-column>
+        <host value="style-column" />
+        <port value="9000" />
+    </style-column>
+    <style-which>
+        <host value="style-which" />
+        <port value="9000" />
+    </style-which>
 </pharbers-modules>

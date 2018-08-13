@@ -94,7 +94,13 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
 
     def allotTask = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("allot task in scenario"))), jv) ::
-                msg_updateRepTask(jv) ::
+                msg_allotRepTask(jv) ::
+                msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+    })
+
+    def allotManager = Action(request => requestArgsQuery().requestArgs(request) { jv =>
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("allot manager in scenario"))), jv) ::
+                msg_allotManagerTask(jv) ::
                 msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 

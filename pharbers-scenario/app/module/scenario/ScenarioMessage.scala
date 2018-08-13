@@ -10,7 +10,7 @@ abstract class msg_ScenarioCommand extends CommonMessage("scenario", ScenarioMod
 abstract class msg_BudgetProgressCommand extends CommonMessage("BudgetProgress", BudgetProgressModule)
 abstract class msg_HospitalListCommand extends CommonMessage("HospitalList", HospitalListModule)
 abstract class msg_HospitalDetailCommand extends CommonMessage("HospitalDetail", HospitalDetailModule)
-abstract class msg_UpdateRepTaskCommand extends CommonMessage("UpdateRepTask", UpdateRepTaskModule)
+abstract class msg_AllotTaskCommand extends CommonMessage("AllotTask", AllotTaskModule)
 abstract class msg_CreatePhaseCommand extends CommonMessage("CreatePhase", CreatePhaseModule)
 
 object ScenarioMessage {
@@ -33,7 +33,9 @@ object ScenarioMessage {
 
     case class msg_queryHospitalDetail(data: JsValue) extends msg_HospitalDetailCommand
 
-    case class msg_updateRepTask(data: JsValue) extends msg_UpdateRepTaskCommand
+    case class msg_allotRepTask(data: JsValue) extends msg_AllotTaskCommand
+
+    case class msg_allotManagerTask(data: JsValue) extends msg_AllotTaskCommand
 
     case class msg_report2current(data: JsValue) extends msg_CreatePhaseCommand
 

@@ -33,8 +33,8 @@ object HospitalDetailModule extends ModuleTrait {
             val pre_dest_goods_rep = past.find(p => p("phase").as[Int] == current_phase - 1)
                     .get("dest_goods_rep").as[List[Map[String, JsValue]]]
 
-            val current_dest_rep = current("dest_rep").as[List[String Map JsValue]]
-            val represents = current_dest_rep.filter(_ ("dest_id") == target_hosp_id)
+            val current_dest_goods_rep = current("dest_goods_rep").as[List[String Map JsValue]]
+            val represents = current_dest_goods_rep.filter(_ ("dest_id") == target_hosp_id)
                     .map(_ ("rep_id"))
                     .map(rep_id => reps.find(_ ("id") == rep_id).get)
 
