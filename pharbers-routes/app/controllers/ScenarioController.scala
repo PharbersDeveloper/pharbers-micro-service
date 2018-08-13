@@ -8,12 +8,12 @@ import module.AuthMessage.msg_tokenParse
 import controllers.common.requestArgsQuery
 import com.pharbers.bmpattern.LogMessage.msg_log
 import com.pharbers.dbManagerTrait.dbInstanceManager
+import module.ReportMessage.msg_queryReportByCurrent
 import controllers.common.JsonapiAdapter.msg_JsonapiAdapter
 import com.pharbers.bmmessages.{CommonModules, MessageRoutes}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import com.pharbers.bmpattern.ResultMessage.msg_CommonResultMessage
-import module.ProposalMessage.msg_queryProposalByScenario
-import module.ReportMessage.msg_queryReportByScenario
+import module.ProposalMessage.{msg_queryProposal, msg_queryProposalByScenario}
 
 class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject: ActorSystem, dbt: dbInstanceManager) extends AbstractController(cc) {
 
@@ -24,10 +24,8 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
     def createSecnario = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("create new scenario"))), jv) ::
                 msg_tokenParse(jv) ::
-                msg_queryReportByScenario(jv) ::
-                msg_queryScenario(jv) ::
-                msg_queryProposalByScenario(jv) ::
-                msg_createPhase(jv) ::
+                msg_queryProposal(jv) ::
+                msg_pushScenario(jv) ::
                 msg_JsonapiAdapter(jv) ::
                 msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
@@ -63,6 +61,7 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("allot task"))), jv) ::
                 msg_tokenParse(jv) ::
                 msg_allotTask(jv) ::
+                msg_managerTask(jv) ::
                 msg_JsonapiAdapter(jv) ::
                 msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
@@ -70,8 +69,8 @@ class ScenarioController @Inject()(implicit cc: ControllerComponents, as_inject:
     def createPhase = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("create new phase"))), jv) ::
                 msg_tokenParse(jv) ::
-                msg_queryReportByScenario(jv) ::
                 msg_queryScenario(jv) ::
+                msg_queryReportByCurrent(jv) ::
                 msg_queryProposalByScenario(jv) ::
                 msg_createPhase(jv) ::
                 msg_JsonapiAdapter(jv) ::

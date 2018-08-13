@@ -7,7 +7,7 @@ POST    /api/user/login                         controllers.UserController.userL
 
 POST    /api/proposal/lst                       controllers.ProposalController.queryProposalLst()
 
-POST    /api/proposal/scenario/create           controllers.ScenarioController.createPhase()
+POST    /api/proposal/scenario/create           controllers.ScenarioController.createSecnario()
 POST    /api/proposal/budget/info               controllers.ScenarioController.queryBudgetProgress()
 POST    /api/proposal/hospital/lst              controllers.ScenarioController.queryHospitalLst()
 POST    /api/proposal/hospital/detail           controllers.ScenarioController.queryHospitalDetail()

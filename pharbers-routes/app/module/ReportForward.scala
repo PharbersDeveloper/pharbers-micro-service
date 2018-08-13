@@ -19,7 +19,9 @@ abstract class msg_ReportCommand extends CommonMessage("report", ReportModule)
 
 object ReportMessage {
 
-    case class msg_queryReportByScenario(data: JsValue) extends msg_ReportCommand
+    case class msg_queryReportByCurrent(data: JsValue) extends msg_ReportCommand
+
+    case class msg_queryReportByPast(data: JsValue) extends msg_ReportCommand
 
     case class msg_formatTotalReport(data: JsValue) extends msg_ReportCommand
 
@@ -41,8 +43,11 @@ object ReportModule extends ModuleTrait {
     override def dispatchMsg(msg: MessageDefines)(pr: Option[Map[String, JsValue]])
                             (implicit cm: CommonModules): (Option[Map[String, JsValue]], Option[JsValue]) = msg match {
 
-        case msg_queryReportByScenario(data: JsValue) =>
-            repeater((_, p) => forward("/api/report/query").post(cond(p)))(mergeResult)(data, pr)
+        case msg_queryReportByCurrent(data: JsValue) =>
+            repeater((_, p) => forward("/api/report/query").post(byCurrent(p)))(mergeResult)(data, pr)
+
+        case msg_queryReportByPast(data: JsValue) =>
+            repeater((_, p) => forward("/api/report/query").post(byPast(p)))(mergeResult)(data, pr)
 
         case msg_formatTotalReport(_) =>
             mergeReportColumn("summary_report", pr)
@@ -69,7 +74,19 @@ case class report() extends phForward {
 
     override implicit lazy val module_name: String = "report"
 
-    def cond(pr: Option[Map[String, JsValue]]): JsValue = {
+    def byCurrent(pr: Option[Map[String, JsValue]]): JsValue = {
+        val report_id = (pr.get("scenario") \ "current" \ "report_id").as[String]
+
+        toJson(Map(
+            "data" -> toJson(Map(
+                "condition" -> toJson(Map(
+                    "report_id" -> toJson(report_id)
+                ))
+            ))
+        ))
+    }
+
+    def byPast(pr: Option[Map[String, JsValue]]): JsValue = {
         val report_id = (pr.get("scenario") \ "past").as[List[Map[String, JsValue]]]
                 .map(m => m("phase").as[Int] -> m("report_id").as[String])
                 .maxBy(_._1)._2

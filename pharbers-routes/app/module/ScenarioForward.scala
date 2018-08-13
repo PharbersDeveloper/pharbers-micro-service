@@ -39,12 +39,17 @@ object ScenarioMessage {
 
     case class msg_allotTask(data: JsValue) extends msg_ScenarioCommand
 
+    case class msg_managerTask(data: JsValue) extends msg_ScenarioCommand
+
     case class msg_createPhase(data: JsValue) extends msg_ScenarioCommand
+
+    case class msg_pushScenario(data: JsValue) extends msg_ScenarioCommand
 
 }
 
 object ScenarioModule extends ModuleTrait {
     val s = scenario()
+
     import s._
 
     override def dispatchMsg(msg: MessageDefines)(pr: Option[Map[String, JsValue]])
@@ -68,8 +73,14 @@ object ScenarioModule extends ModuleTrait {
         case msg_allotTask(data: JsValue) =>
             repeater((d, _) => forward("/api/scenario/task/allot").post(d))(onlyResult)(data, pr)
 
+        case msg_managerTask(data: JsValue) =>
+            repeater((d, _) => forward("/api/scenario/manager/allot").post(d))(onlyResult)(data, pr)
+
         case msg_createPhase(data: JsValue) =>
-            repeater((d, p) => forward("/api/scenario/phase/next").post(toJson(d.as[Map[String, JsValue]] ++ p.get)))(onlyResult)(data, pr)
+            repeater((d, p) => forward("/api/scenario/phase/next").post(toJson(p.get)))(onlyResult)(data, pr)
+
+        case msg_pushScenario(data: JsValue) =>
+            repeater((_, p) => forward("/api/scenario/push").post(m2d(p)))(onlyResult)(data, pr)
 
         case _ => ???
     }
@@ -87,6 +98,24 @@ case class scenario() extends phForward {
                     "user_id" -> toJson(user_id),
                     "proposals" -> toJson(proposals)
                 ))
+            ))
+        ))
+    }
+
+    val m2d: Option[Map[String, JsValue]] => JsValue = { pr =>
+        val default_current = 4
+        val user_id = (pr.get("user") \ "user_id").as[String]
+        val proposal_id = (pr.get("proposal") \ "id").as[String]
+        val scenarios = (pr.get("proposal") \ "scenarios").as[List[Map[String, JsValue]]]
+        val total_phase = scenarios.size
+
+        toJson(Map(
+            "scenario" -> toJson(Map(
+                "user_id" -> toJson(user_id),
+                "proposal_id" -> toJson(proposal_id),
+                "total_phase" -> toJson(total_phase),
+                "current" -> toJson(scenarios.find(x => x("phase").as[Int] == default_current).get),
+                "past" -> toJson(scenarios.filter(x => x("phase").as[Int] < default_current))
             ))
         ))
     }
