@@ -92,6 +92,17 @@ class ReportController @Inject()(implicit cc: ControllerComponents, as_inject: A
                 :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
     })
 
+    def queryRepAbility = Action(request => requestArgsQuery().requestArgs(request) { jv =>
+        MessageRoutes(msg_log(toJson(Map("method" -> toJson("query RepAbility"))), jv)
+                :: msg_tokenParse(jv)
+                :: msg_queryScenario(jv)
+                :: msg_queryReportByPast(jv)
+                :: msg_queryStyleColumn(jv)
+                :: msg_formatRepAbility(jv)
+                :: msg_JsonapiAdapter(jv)
+                :: msg_CommonResultMessage() :: Nil, None)(CommonModules(Some(Map("db" -> dbt))))
+    })
+
     def queryAssessReport = Action(request => requestArgsQuery().requestArgs(request) { jv =>
         MessageRoutes(msg_log(toJson(Map("method" -> toJson("query assess report"))), jv)
             :: msg_tokenParse(jv)
