@@ -33,6 +33,8 @@ object ReportMessage {
 
     case class msg_formatRepIndResos(data: JsValue) extends msg_ReportCommand
 
+    case class msg_formatRepAbility(data: JsValue) extends msg_ReportCommand
+
     case class msg_queryAssessReport(data: JsValue) extends msg_ReportCommand
 
     case class msg_formatAssessReport(data: JsValue) extends msg_ReportCommand
@@ -66,6 +68,9 @@ object ReportModule extends ModuleTrait {
 
         case msg_formatRepIndResos(_) =>
             mergeReportColumn("rep_ind_resos", pr)
+
+        case msg_formatRepAbility(_) =>
+            mergeReportColumn("rep_ability_report", pr)
 
         case msg_queryAssessReport(data: JsValue) =>
             repeater((d, _) => forward("/api/assess-report/query").post(d))(mergeResult)(data, pr)
