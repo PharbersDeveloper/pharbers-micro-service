@@ -42,6 +42,8 @@ object BudgetProgressModule extends ModuleTrait {
                         .map(x => x("user_input_day").as[Int])
                         .sum
                 Map(
+                    "id" -> rep("id"),
+                    "image" -> rep("rep_image"),
                     "name" -> rep("rep_name"),
                     "total" -> toJson(total_day),
                     "used" -> toJson(use_day)
