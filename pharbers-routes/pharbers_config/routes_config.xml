@@ -1,0 +1,66 @@
+<pharbers-modules>
+    <auth>
+        <host value="123.56.179.133" />
+        <port value="18001" />
+    </auth>
+    <user>
+        <host value="123.56.179.133" />
+        <port value="18002" />
+    </user>
+    <company>
+        <host value="123.56.179.133" />
+        <port value="18003" />
+    </company>
+    <role>
+        <host value="123.56.179.133" />
+        <port value="18004" />
+    </role>
+    <user-company>
+        <host value="123.56.179.133" />
+        <port value="18005" />
+    </user-company>
+    <user-role>
+        <host value="123.56.179.133" />
+        <port value="18006" />
+    </user-role>
+    <hosp>
+        <host value="123.56.179.133" />
+        <port value="18007" />
+    </hosp>
+    <resource>
+        <host value="123.56.179.133" />
+        <port value="18008" />
+    </resource>
+    <representative>
+        <host value="123.56.179.133" />
+        <port value="18009" />
+    </representative>
+    <good>
+        <host value="123.56.179.133" />
+        <port value="18010" />
+    </good>
+    <proposal>
+        <host value="123.56.179.133" />
+        <port value="18011" />
+    </proposal>
+    <user-proposal>
+        <host value="123.56.179.133" />
+        <port value="18012" />
+    </user-proposal>
+    <report>
+        <host value="123.56.179.133" />
+        <port value="18013" />
+    </report>
+    <scenario>
+        <host value="123.56.179.133" />
+        <port value="18014" />
+    </scenario>
+    <style-column>
+        <host value="123.56.179.133" />
+        <port value="18015" />
+    </style-column>
+    <style-which>
+        <host value="123.56.179.133" />
+        <port value="18016" />
+    </style-which>
+</pharbers-modules>

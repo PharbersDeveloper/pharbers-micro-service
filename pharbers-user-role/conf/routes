@@ -1,0 +1,8 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+POST    /api/user-role/bind/push                 controllers.User2RoleController.bind()
+POST    /api/user-role/bind/pop                  controllers.User2RoleController.unbind()
+POST    /api/user-role/bind/query                controllers.User2RoleController.queryBind()

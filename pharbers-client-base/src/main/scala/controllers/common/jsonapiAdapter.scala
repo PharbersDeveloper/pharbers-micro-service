@@ -15,7 +15,8 @@ object JsonapiAdapter {
         val minor = (jv \ "version" \ "minor").asOpt[Int].get
 
         val `type` = (jv \ "data" \ "type").asOpt[String].get
-        val `data` = pr.get.values.head
+        val `data` = pr.get.getOrElse("result", pr.get.head._2)
+
         (Some(Map(
             "timestamp" -> toJson(new Date().getTime),
             "version" -> toJson(Map(

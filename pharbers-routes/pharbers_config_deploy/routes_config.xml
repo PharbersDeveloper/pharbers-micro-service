@@ -1,0 +1,66 @@
+<pharbers-modules>
+    <auth>
+        <host value="auth" />
+        <port value="9000" />
+    </auth>
+    <user>
+        <host value="user" />
+        <port value="9000" />
+    </user>
+    <company>
+        <host value="company" />
+        <port value="9000" />
+    </company>
+    <role>
+        <host value="role" />
+        <port value="9000" />
+    </role>
+    <user-company>
+        <host value="user-company" />
+        <port value="9000" />
+    </user-company>
+    <user-role>
+        <host value="user-role" />
+        <port value="9000" />
+    </user-role>
+    <hosp>
+        <host value="hosp" />
+        <port value="9000" />
+    </hosp>
+    <resource>
+        <host value="resource" />
+        <port value="9000" />
+    </resource>
+    <representative>
+        <host value="representative" />
+        <port value="9000" />
+    </representative>
+    <good>
+        <host value="good" />
+        <port value="9000" />
+    </good>
+    <proposal>
+        <host value="proposal" />
+        <port value="9000" />
+    </proposal>
+    <user-proposal>
+        <host value="user-proposal" />
+        <port value="9000" />
+    </user-proposal>
+    <report>
+        <host value="report" />
+        <port value="9000" />
+    </report>
+    <scenario>
+        <host value="scenario" />
+        <port value="9000" />
+    </scenario>
+    <style-column>
+        <host value="style-column" />
+        <port value="9000" />
+    </style-column>
+    <style-which>
+        <host value="style-which" />
+        <port value="9000" />
+    </style-which>
+</pharbers-modules>

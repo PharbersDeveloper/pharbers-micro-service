@@ -1,0 +1,10 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+#POST    /api/column/push              controllers.ColumnController.pushColumn()
+#POST    /api/column/pop               controllers.ColumnController.popColumn()
+#POST    /api/column/update            controllers.ColumnController.updateColumn()
+POST    /api/column/query             controllers.ColumnController.queryColumn()
+POST    /api/column/query/multi       controllers.ColumnController.queryColumnMulti()

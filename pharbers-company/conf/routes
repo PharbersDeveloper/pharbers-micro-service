@@ -1,0 +1,10 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+POST    /api/company/push              controllers.CompanyController.pushCompany()
+POST    /api/company/pop               controllers.CompanyController.popCompany()
+POST    /api/company/update            controllers.CompanyController.updateCompany()
+POST    /api/company/query             controllers.CompanyController.queryCompany()
+POST    /api/company/query/multi       controllers.CompanyController.queryCompanyMulti()

@@ -17,7 +17,7 @@ object requestArgsQuery {
 }
 
 class requestArgsQuery @Inject() (implicit akkasys : ActorSystem, cc: ControllerComponents) extends AbstractController(cc) {
-	implicit val t: Timeout = Timeout(5 second)
+	implicit val t: Timeout = Timeout(20 second)
 
 	def requestArgs(request : Request[AnyContent])(func : JsValue => MessageRoutes) : Result = {
 		try {

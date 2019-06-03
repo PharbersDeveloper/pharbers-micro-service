@@ -1,0 +1,10 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+POST    /api/rep/push                  controllers.RepresentativeController.pushRepresentative()
+POST    /api/rep/pop                   controllers.RepresentativeController.popRepresentative()
+POST    /api/rep/update                controllers.RepresentativeController.updateRepresentative()
+POST    /api/rep/query                 controllers.RepresentativeController.queryRepresentative()
+POST    /api/rep/query/multi           controllers.RepresentativeController.queryMultiRepresentative()
